@@ -54,19 +54,35 @@ def to_supabase_row(raw: Dict[str, Any]) -> Dict[str, Any]:
     row: Dict[str, Any] = {}
 
     # Use external_id as the primary key 'id'
-    row["id"] = str(raw.get("external_id") or raw.get("product_id") or raw.get("product_url"))
+    # Use external_id as the primary key 'id'
+    external_id = raw.get("external_id") or raw.get("product_id")
+    row["id"] = str(external_id) if external_id else str(raw.get("product_url", "unknown"))
     row["source"] = raw.get("source") or "scraper"
     row["title"] = raw.get("title") or "Unknown title"
     row["description"] = raw.get("description")
     row["brand"] = raw.get("brand") or "Bershka"
     row["price"] = raw.get("price")
     row["currency"] = raw.get("currency") or "EUR"
-    # Fix relative image URLs for Bershka
+    
+    # Fix image URLs for Bershka
     image_url = raw.get("image_url")
-    if image_url and image_url.startswith('/'):
-        image_url = f"https://static.bershka.net{image_url}"
+    if image_url:
+        # Handle relative URLs
+        if image_url.startswith('/'):
+            image_url = f"https://static.bershka.net{image_url}"
+        # Handle protocol-relative URLs
+        elif image_url.startswith('//'):
+            image_url = f"https:{image_url}"
     row["image_url"] = image_url
-    row["product_url"] = raw.get("product_url")
+    
+    # Product URL should be unique - use the one generated in cli.py or construct from ID
+    product_url = raw.get("product_url")
+    if not product_url and external_id:
+        # Generate a unique product URL if not provided
+        title = raw.get("title", "product")
+        slug = re.sub(r'[^a-z0-9]+', title.lower(), '-').strip('-')
+        product_url = f"https://www.bershka.com/us/{slug}-c0p{external_id}.html"
+    row["product_url"] = product_url
     row["affiliate_url"] = raw.get("affiliate_url")
 
     # Set second_hand to FALSE for all current brands (they are not second-hand marketplaces)
@@ -83,32 +99,9 @@ def to_supabase_row(raw: Dict[str, Any]) -> Dict[str, Any]:
         else:
             row["gender"] = gender_str  # Keep original if doesn't match
 
-    # Category detection based on Bershka category IDs
-    category_id = None
-
-    # Extract category ID from endpoint URL
-    endpoint = raw.get("_meta", {}).get("endpoint")
-    if endpoint:
-        # Extract category ID from endpoint URL like "categoryId=1010834564"
-        import re
-        match = re.search(r'categoryId=(\d+)', str(endpoint))
-        if match:
-            category_id = match.group(1)
-
-    # Accessory and footwear categories
-    accessory_category_ids = {
-        "1010193192",  # women's shoes (footwear)
-        "1010193138",  # women's bags & coin purses (accessory)
-        "1010193134",  # women's accessories (accessory)
-    }
-
-    if category_id in accessory_category_ids:
-        if category_id == "1010193192":
-            row["category"] = "footwear"
-        else:
-            row["category"] = "accessory"
-    else:
-        row["category"] = None  # Clothing items get null category
+    # Category is set by cli.py based on the category config
+    # If not set, default to None (clothing)
+    row["category"] = raw.get("category")
 
     # Normalize sizes: accept str, list[str], or nested lists → text (comma-separated)
     size_val = raw.get("size") or raw.get("sizes")

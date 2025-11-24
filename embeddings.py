@@ -45,22 +45,24 @@ def get_image_embedding(image_url: str, max_retries: int = 3) -> Optional[list]:
         print(f"[SKIP] Data URL placeholder - no embedding needed")
         return None
 
-    # Skip video files (.m3u8)
-    if '.m3u8' in raw_url:
-        print(f"[SKIP] Video file (.m3u8) - not an image")
+    # Skip video files
+    video_indicators = ['.m3u8', '.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm', '.m4v', 'video.mp4', '/video']
+    if any(indicator in raw_url.lower() for indicator in video_indicators):
+        # Silently skip video files
         return None
 
     # Skip other non-image file types
-    non_image_extensions = ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm', '.m4v', '.html', '.htm', '.json', '.xml', '.txt', '.css', '.js']
+    non_image_extensions = ['.html', '.htm', '.json', '.xml', '.txt', '.css', '.js']
     if any(raw_url.lower().endswith(ext) for ext in non_image_extensions):
-        print(f"[SKIP] Non-image file type - not an image")
         return None
 
-    # Skip obviously incomplete URLs
+    # Skip obviously incomplete or invalid URLs
     if "bershka" in raw_url.lower():
-        # Bershka image URLs should have the static domain and path structure
-        if len(raw_url) < 50 or not raw_url.startswith('https://static.bershka.net/'):
-            print(f"[SKIP] Incomplete Bershka URL: {raw_url}")
+        # Bershka image URLs should have the static domain and proper path structure
+        if not raw_url.startswith('https://static.bershka.net/'):
+            return None
+        # Valid Bershka URLs should be at least 80 chars and contain 'assets/public'
+        if 'assets/public' not in raw_url and len(raw_url) < 80:
             return None
 
     if raw_url.startswith("//"):
