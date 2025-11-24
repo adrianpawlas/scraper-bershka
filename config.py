@@ -17,6 +17,7 @@ BERSHKA_LOCALE = "en_GB"
 BATCH_SIZE = int(os.getenv('BATCH_SIZE', 50))
 MAX_WORKERS = int(os.getenv('MAX_WORKERS', 5))
 EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL', 'google/siglip-base-patch16-384')
+PRODUCT_LIMIT = int(os.getenv('PRODUCT_LIMIT', 0))  # 0 = no limit, > 0 = limit for testing
 
 # Category IDs for different sections
 CATEGORY_IDS = {

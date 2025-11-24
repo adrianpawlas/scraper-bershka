@@ -26,7 +26,8 @@ from psycopg2.extras import execute_values
 from config import (
     SUPABASE_URL, SUPABASE_KEY, BERSHKA_BASE_URL, BERSHKA_APP_ID,
     BERSHKA_LANGUAGE_ID, BERSHKA_LOCALE, BATCH_SIZE, MAX_WORKERS,
-    EMBEDDING_MODEL, CATEGORY_IDS, GENDER_MAPPING, CATEGORY_CLASSIFICATION
+    EMBEDDING_MODEL, CATEGORY_IDS, GENDER_MAPPING, CATEGORY_CLASSIFICATION,
+    PRODUCT_LIMIT
 )
 
 # Setup logging
@@ -332,11 +333,18 @@ class BershkaScraper:
             with torch.no_grad():
                 outputs = self.model(**inputs)
 
-            # For SigLIP, get the image embeddings from the last hidden state
-            # Take the mean across the sequence dimension for image embeddings
-            image_embeds = outputs.image_embeds.squeeze().tolist()
+            # Get the image embeddings (768-dim)
+            # SigLIP returns image_embeds directly
+            if hasattr(outputs, 'image_embeds'):
+                embedding = outputs.image_embeds.squeeze().tolist()
+            else:
+                # Fallback: try pooler_output
+                embedding = outputs.pooler_output.squeeze().tolist()
 
-            return image_embeds
+            # Ensure it's a list of floats
+            if isinstance(embedding, float):
+                return [embedding]
+            return embedding
 
         except Exception as e:
             logger.error(f"Error processing image embedding: {e}")
@@ -349,17 +357,27 @@ class BershkaScraper:
         all_products = []
 
         try:
-            # For testing purposes, we'll use the provided sample product IDs
-            # In production, you'd need to find a way to get all product IDs for a category
+            # For testing with PRODUCT_LIMIT, use sample product IDs
+            if PRODUCT_LIMIT > 0 and not sample_product_ids:
+                # Use sample product IDs for testing limited runs
+                if 'men' in category_name:
+                    sample_product_ids = [199850199, 200346172, 200711323, 203971838, 201304218, 204544074, 205222885, 204203891, 204203890, 203677704, 202812583, 202680979, 202411683, 202238171, 201967673, 201927866, 201129538, 201096327, 201096326, 201096315]
+                else:
+                    sample_product_ids = [201665294, 199061499, 189277126, 189975385, 190668687, 189836542, 198409429, 191849717, 196700066, 196700067, 190668686, 205025006, 189276745, 196951849, 194635088, 189277174, 202797791, 190668688, 196951862, 196951861]
+
             if sample_product_ids:
                 # Test with provided sample product IDs
-                product_ids_to_fetch = sample_product_ids[:20]  # Limit for testing
+                product_ids_to_fetch = sample_product_ids[:min(20, PRODUCT_LIMIT if PRODUCT_LIMIT > 0 else 20)]
                 data = await self.fetch_products_batch(category_id, product_ids_to_fetch)
 
                 if data.get('products'):
                     for product in data['products']:
                         product_data = self.extract_product_info(product)
                         all_products.extend(product_data)
+
+                        # Respect product limit during extraction
+                        if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
+                            break
 
             else:
                 # Try to find product IDs by searching or using a different endpoint
@@ -377,12 +395,14 @@ class BershkaScraper:
         processed_products = []
 
         for product in products:
-            # Generate embedding
+            # Generate embedding (temporarily disabled for testing)
             if product['image_url']:
-                embedding = await self.generate_embedding(product['image_url'])
-                if embedding:
-                    product['embedding'] = embedding
-                    processed_products.append(product)
+                # Temporarily skip embedding generation for testing
+                # embedding = await self.generate_embedding(product['image_url'])
+                # if embedding:
+                #     product['embedding'] = embedding
+                product['embedding'] = None  # Placeholder for testing
+                processed_products.append(product)
 
         return processed_products
 
@@ -430,10 +450,23 @@ class BershkaScraper:
             products = await self.scrape_category(f"men_{category_name}", category_id)
             all_products.extend(products)
 
-        # Scrape women's categories
-        for category_name, category_id in CATEGORY_IDS['women'].items():
-            products = await self.scrape_category(f"women_{category_name}", category_id)
-            all_products.extend(products)
+            # Check product limit for testing
+            if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
+                all_products = all_products[:PRODUCT_LIMIT]
+                logger.info(f"Reached product limit of {PRODUCT_LIMIT}, stopping scraping")
+                break
+
+        # Scrape women's categories (if we haven't reached the limit)
+        if PRODUCT_LIMIT == 0 or len(all_products) < PRODUCT_LIMIT:
+            for category_name, category_id in CATEGORY_IDS['women'].items():
+                products = await self.scrape_category(f"women_{category_name}", category_id)
+                all_products.extend(products)
+
+                # Check product limit for testing
+                if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
+                    all_products = all_products[:PRODUCT_LIMIT]
+                    logger.info(f"Reached product limit of {PRODUCT_LIMIT}, stopping scraping")
+                    break
 
         logger.info(f"Total products collected: {len(all_products)}")
 
