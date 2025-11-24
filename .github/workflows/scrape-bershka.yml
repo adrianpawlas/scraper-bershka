@@ -50,10 +50,10 @@ jobs:
       run: |
         if [ "${{ github.event.inputs.scrape_mode }}" = "test" ] || [ "${{ github.event_name }}" = "schedule" ]; then
           echo "Running in test mode with 10 products..."
-          python cli.py --limit 10
+          python -m cli --limit 10
         else
           echo "Running full scrape..."
-          python cli.py
+          python -m cli
         fi
 
     - name: Upload logs on failure
