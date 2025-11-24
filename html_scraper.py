@@ -1,6 +1,13 @@
 from typing import List, Optional
-from bs4 import BeautifulSoup
-from .http_client import PoliteSession
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    BeautifulSoup = None
+
+try:
+    from .http_client import PoliteSession
+except ImportError:
+    from http_client import PoliteSession
 
 
 def scrape_category_for_product_ids(session: PoliteSession, category_url: str, headers: Optional[dict] = None) -> List[str]:
