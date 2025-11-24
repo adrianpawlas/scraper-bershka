@@ -98,20 +98,8 @@ def ingest_api(session: PoliteSession, endpoint: str, jmes_items: Any, field_map
 	if debug:
 		try:
 			print(f"Debug: matched {len(items)} items; with_id={with_id}; with_image={with_image}")
-			if items:
-				# print available keys from first item to refine mapping
-				first = items[0]
-				if isinstance(first, dict):
-					print(f"Debug: first item keys: {list(first.keys())[:15]}")
-					# Check image structure
-					if 'image' in first:
-						print(f"Debug: image field: {first['image']}")
-					if 'bundleProductSummaries' in first:
-						print(f"Debug: bundleProductSummaries exists")
-					else:
-						print(f"Debug: bundleProductSummaries NOT found")
-		except Exception as e:
-			print(f"Debug error: {e}")
+		except Exception:
+			pass
 
 	return products
 
