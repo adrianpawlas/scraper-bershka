@@ -1,116 +1,111 @@
 import os
+from typing import Dict, List, Any
 from dotenv import load_dotenv
+import yaml
 
-load_dotenv()
 
-# Supabase Configuration
-SUPABASE_URL = "https://yqawmzggcgpeyaaynrjk.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxYXdtemdnY2dwZXlhYXlucmprIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTAxMDkyNiwiZXhwIjoyMDcwNTg2OTI2fQ.XtLpxausFriraFJeX27ZzsdQsFv3uQKXBBggoz6P4D4"
+def load_env():
+    """Load environment variables from .env file."""
+    load_dotenv()
 
-# Bershka API Configuration
-BERSHKA_BASE_URL = "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549"
-BERSHKA_APP_ID = 1
-BERSHKA_LANGUAGE_ID = -15
-BERSHKA_LOCALE = "en_GB"
 
-# Processing Configuration
-BATCH_SIZE = int(os.getenv('BATCH_SIZE', 50))
-MAX_WORKERS = int(os.getenv('MAX_WORKERS', 5))
-EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL', 'google/siglip-base-patch16-384')
-PRODUCT_LIMIT = int(os.getenv('PRODUCT_LIMIT', 0))  # 0 = no limit, > 0 = limit for testing
-
-# Category IDs and complete product ID lists from Bershka API catalogs
-CATEGORY_IDS = {
-    'men': {
-        'all': {
-            'category_id': 1010834564,
-            'product_ids': [199850199, 200346172, 200711323, 203971838, 201304218, 204544074, 205222885, 204203891, 204203890, 203677704, 202812583, 202680979, 202411683, 202238171, 201967673, 201927866, 201129538, 201096327, 201096326, 201096315]
-        }
-    },
-    'women': {
-        'jackets_trench': {
-            'category_id': 1010193212,
-            'product_ids': [201665294, 199061499, 189277126, 189975385, 190668687, 189836542, 198409429, 191849717, 196700066, 196700067, 190668686, 205025006, 189276745, 196951849, 194635088, 189277174, 202797791, 190668688, 196951862, 196951861]
-        },
-        'coats': {
-            'category_id': 1010240019,
-            'product_ids': [191107022, 189836544, 189836543, 206080611, 189277147, 189277145, 196513966, 189277146, 195184008, 195183997, 193334216, 195183999, 189277214, 190425491, 196539604, 191245237, 191107025, 193036802, 197298336, 196958055]
-        },
-        'jeans': {
-            'category_id': 1010276029,
-            'product_ids': [204234905, 208227334, 193056302, 193056303, 196379419, 197475602, 194635105, 196946582, 196946577, 196946581, 197454222, 195682617, 193898321, 191239080, 196661257, 193334236, 193334235, 189277029, 193750495, 201198143, 200346175]
-        },
-        'pants': {
-            'category_id': 1010193216,
-            'product_ids': [205676865, 208227340, 192519455, 197632445, 198187159, 197632443, 197632453, 206551553, 199125540, 199125541, 199219990, 206551552, 206551554, 202459054, 204042838, 198311888, 196951627, 196951629, 205527770, 196951628]
-        },
-        'dresses_jumpsuit': {
-            'category_id': 1010193213,
-            'product_ids': [206098478, 206098470, 194030441, 196958028, 199942359, 199942358, 204245232, 203622818, 202098272, 197573693, 203712806, 198552027, 198552026, 198552028, 198282751, 197716827, 200227977, 198282748, 199756268, 199756269]
-        },
-        'sweaters_cardigans': {
-            'category_id': 1010193223,
-            'product_ids': [204067044, 204067043, 199756257, 199756258, 191867628, 191567223, 191567222, 189486676, 197831038, 194669576, 207206240, 195682642, 191867629, 191849716, 191849715, 197322966, 197322968, 197322967, 191567204, 204042835]
-        },
-        'sweatshirts_hoodies': {
-            'category_id': 1010193222,
-            'product_ids': [205470743, 205462797, 198552031, 203210422, 203302139, 195682638, 197716820, 196513967, 198552032, 202818372, 204054385, 207374437, 196951895, 196951894, 193056309, 195834048, 197716804, 197716803, 199756271, 199756272, 199756273]
-        },
-        'tops_bodysuits': {
-            'category_id': 1010193220,
-            'product_ids': [206098469, 202757041, 205462803, 197322949, 196830011, 196830012, 203622821, 204245233, 196958310, 203008975, 203008976, 206080228, 199767245, 206805015, 203712798, 193028967, 201818674, 191722643, 195710380, 197565959, 205527764, 197565958]
-        },
-        'tshirts': {
-            'category_id': 1010193217,
-            'product_ids': [204937263, 205470746, 208227341, 205462810, 205470747, 205470745, 204937265, 204937264, 206098469, 202757041, 197716818, 204291857, 203302142, 202680984, 198000442, 203398386, 201081924, 193182119, 205462803, 202757039]
-        },
-        'shirts_blouses': {
-            'category_id': 1010193221,
-            'product_ids': [196946568, 196946571, 200309568, 196946569, 202798275, 207206781, 196946565, 203597898, 205566793, 197299019, 202680970, 202797833, 198409452, 192004822, 192004823, 189276683, 189276684, 198341844, 191102668, 190927201]
-        },
-        'skirts': {
-            'category_id': 1010280023,
-            'product_ids': [206551558, 199372104, 205566713, 200458825, 199809311, 206551559, 189277213, 197378444, 201854771, 197659246, 203793125, 203793126, 206551555, 206551556, 197299655, 196951957, 196951956, 197322971, 197322972, 202680968, 206080599]
-        },
-        'shorts_jorts': {
-            'category_id': 1010194517,
-            'product_ids': [200227992, 206080960, 202535406, 197622276, 197298422, 198373427, 203277883, 202459045, 202459046, 198373428, 206080226, 196957965, 196957967, 196957969, 196957970, 196957966, 196957968, 198409414, 197622277, 189277008]
-        },
-        'matching_sets': {
-            'category_id': 1010429555,
-            'product_ids': [207373921, 201665294, 201653849, 184103499, 196951895, 196951627, 200213705, 196951898, 196951631, 207206656, 206805015, 206551559, 200308978, 193056302, 205566946, 203565710, 203422386, 205025167, 199767297, 201855278, 196951849, 193750494]
-        },
-        'swimwear': {
-            'category_id': 1010361506,
-            'product_ids': [196958122, 196958367, 196958042, 196958304, 197298431, 196951886, 196958435, 196958436, 196958303, 204066840, 204066844, 204067035, 204066901, 196951885, 204067034, 204066900]
-        },
-        'shoes': {
-            'category_id': 1010193192,
-            'product_ids': [201855340, 191239082, 204042854, 196958599, 204067106, 208227402, 204067108, 208227864, 202226400, 198208934, 189486678, 189836532, 196958596, 195184034, 201854840, 202797916, 192519465, 196958543, 197299027, 196958586]
-        },
-        'bags_coin_purses': {
-            'category_id': 1010193138,
-            'product_ids': [204634216, 196951911, 189276935, 196951910, 189276755, 197309091, 200766649, 197298903, 196951975, 201129527, 201129528, 196957980, 196957979, 191124988, 189276999, 190110933, 189276808, 196957981, 196958027, 196958217]
-        },
-        'accessories': {
-            'category_id': 1010193134,
-            'product_ids': [204634216, 196951911, 196951910, 189276755, 197309091, 196958261, 189276935, 197298903, 196951975, 205527778, 199573591, 203793125, 202459049, 207374434, 207373971, 202459050, 200766649, 200524407, 207374182, 196958217]
-        }
+def get_supabase_env() -> Dict[str, str]:
+    """Get Supabase environment variables."""
+    return {
+        "url": os.getenv("SUPABASE_URL", ""),
+        "key": os.getenv("SUPABASE_KEY", "")
     }
-}
 
-# Gender mapping from section names
-GENDER_MAPPING = {
-    'MEN': 'MAN',
-    'WOMEN': 'WOMAN',
-    'KIDS': 'KIDS',
-    'UNISEX': 'UNISEX'
-}
 
-# Category classification (accessory, footwear, or None for clothing)
-CATEGORY_CLASSIFICATION = {
-    'shoes': 'footwear',
-    'bags_coin_purses': 'accessory',
-    'accessories': 'accessory',
-    # All other categories (clothing) will be None/null
-}
+def get_default_headers() -> Dict[str, str]:
+    """Get default HTTP headers."""
+    return {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'en-GB,en;q=0.9',
+    }
+
+
+def load_sites_config(config_file: str = "sites.yaml") -> List[Dict[str, Any]]:
+    """Load sites configuration from YAML file."""
+    try:
+        with open(config_file, 'r', encoding='utf-8') as f:
+            config = yaml.safe_load(f)
+            # If it's a dict with a sites key, return the sites list
+            if isinstance(config, dict) and 'sites' in config:
+                return config['sites']
+            # If it's already a list, return it
+            elif isinstance(config, list):
+                return config
+            # If it's a dict but not with sites key, wrap it in a list
+            else:
+                return [config]
+    except FileNotFoundError:
+        print(f"Config file {config_file} not found, using default Bershka config")
+        return [{
+            "brand": "Bershka",
+            "merchant": "Bershka",
+            "source": "scraper",
+            "country": "us",
+            "debug": True,
+            "respect_robots": False,
+            "api": {
+                "endpoints": [
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010834564",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193212",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010240019",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010276029",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193216",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193213",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193223",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193222",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193220",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193217",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193221",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010280023",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010194517",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010429555",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010361506",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193192",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193138",
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193134",
+                ],
+                "items_path": "products",
+                "field_map": {
+                    "external_id": "id",
+                    "product_id": "id",
+                    "title": ["nameEn", "name"],
+                    "description": ["bundleProductSummaries[0].detail.longDescription", "bundleProductSummaries[0].detail.description"],
+                    "gender": "bundleProductSummaries[0].sectionNameEN",
+                    "price": "bundleProductSummaries[0].detail.colors[0].sizes[0].price",
+                    "currency": "'EUR'",
+                    "image_url": "bundleProductSummaries[0].detail.colors[0].image.url",
+                    "product_url": "bundleProductSummaries[0].productUrl",
+                    "brand": "'Bershka'",
+                    "sizes": "bundleProductSummaries[0].detail.colors[0].sizes[].name"
+                },
+                "headers": {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+                    "Accept": "application/json, text/plain, */*",
+                    "Accept-Language": "en-GB,en;q=0.9"
+                },
+                "debug": True,
+                "prewarm": [
+                    "https://www.bershka.com/us/",
+                    "https://www.bershka.com/us/men.html",
+                    "https://www.bershka.com/us/women.html"
+                ]
+            }
+        }]
+    except Exception as e:
+        print(f"Error loading config: {e}")
+        return []
+
+
+def get_site_configs(all_sites: List[Dict[str, Any]], filter_brands: str) -> List[Dict[str, Any]]:
+    """Filter sites based on brand names."""
+    if filter_brands.lower() == "all":
+        return all_sites
+
+    brand_list = [b.strip() for b in filter_brands.split(",")]
+    return [site for site in all_sites if site.get("brand", "").lower() in [b.lower() for b in brand_list]]
