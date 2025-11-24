@@ -58,9 +58,9 @@ def get_image_embedding(image_url: str, max_retries: int = 3) -> Optional[list]:
 
     # Skip obviously incomplete URLs
     if "bershka" in raw_url.lower():
-        # Bershka image URLs should be much longer than this
-        if len(raw_url) < 80:
-            print(f"[SKIP] Incomplete Bershka URL (too short: {len(raw_url)} chars)")
+        # Bershka image URLs should have the static domain and path structure
+        if len(raw_url) < 50 or not raw_url.startswith('https://static.bershka.net/'):
+            print(f"[SKIP] Incomplete Bershka URL: {raw_url}")
             return None
 
     if raw_url.startswith("//"):
