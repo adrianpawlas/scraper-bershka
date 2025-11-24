@@ -103,15 +103,13 @@ def ingest_api(session: PoliteSession, endpoint: str, jmes_items: Any, field_map
 				first = items[0]
 				if isinstance(first, dict):
 					print(f"Debug: first item keys: {list(first.keys())[:15]}")
-					# Check xmedia structure
-					if 'bundleProductSummaries' in first and first['bundleProductSummaries']:
-						bps = first['bundleProductSummaries'][0]
-						if 'detail' in bps and 'colors' in bps['detail'] and bps['detail']['colors']:
-							color = bps['detail']['colors'][0]
-							if 'xmedia' in color:
-								print(f"Debug: xmedia keys: {list(color['xmedia'][0].keys()) if color['xmedia'] else 'None'}")
-								if color['xmedia'] and 'xmediaItems' in color['xmedia'][0]:
-									print(f"Debug: xmediaItems length: {len(color['xmedia'][0]['xmediaItems'])}")
+					# Check image structure
+					if 'image' in first:
+						print(f"Debug: image field: {first['image']}")
+					if 'bundleProductSummaries' in first:
+						print(f"Debug: bundleProductSummaries exists")
+					else:
+						print(f"Debug: bundleProductSummaries NOT found")
 		except Exception as e:
 			print(f"Debug error: {e}")
 
