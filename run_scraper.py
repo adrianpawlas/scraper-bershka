@@ -16,12 +16,12 @@ async def main():
             print("🚀 Starting Bershka product scraper...")
             results = await scraper.run_full_scrape()
 
-            print("
-✅ Scrape completed successfully!"            print(f"📊 Results:")
+            print("\n✅ Scrape completed successfully!")
+            print("📊 Results:")
             print(f"   • Total products collected: {results['total_collected']}")
             print(f"   • Products with embeddings: {results['processed']}")
             print(f"   • Products saved to database: {results['saved']}")
-            print(".2f"
+            print(f"   • Duration: {results['duration']:.2f} seconds")
             return results
 
     except KeyboardInterrupt:
