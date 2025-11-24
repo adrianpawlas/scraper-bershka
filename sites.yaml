@@ -33,7 +33,7 @@
       gender: "bundleProductSummaries[0].sectionNameEN"
       price: "bundleProductSummaries[0].detail.colors[0].sizes[0].price"
       currency: "'EUR'"
-      image_url: ["bundleProductSummaries[0].detail.colors[0].xmedia[0].xmediaItems[0].medias[0].extraInfo.deliveryUrl", "image.url"]
+      image_url: ["image.url", "bundleProductSummaries[0].detail.colors[0].xmedia[0].xmediaItems[0].medias[0].extraInfo.deliveryUrl"]
       product_url: "bundleProductSummaries[0].productUrl"
       brand: "'Bershka'"
       sizes: "bundleProductSummaries[0].detail.colors[0].sizes[].name"
