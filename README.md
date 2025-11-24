@@ -24,6 +24,10 @@ A comprehensive scraper for Bershka fashion products that extracts product infor
 - **Rich Product Data**: Extracts titles, descriptions, prices, sizes, categories, and comprehensive metadata
 - **Image Embeddings**: Generates 768-dimensional embeddings using `google/siglip-base-patch16-384`
 - **Supabase Integration**: Stores all data in a PostgreSQL database with vector support
+- **Modular Architecture**: Inspired by production Zara scraper with separate concerns
+- **JMESPath Data Extraction**: Robust JSON parsing with fallback expressions
+- **Polite HTTP Client**: Respects robots.txt and implements request delays
+- **YAML Configuration**: Easily configurable for different sites and APIs
 - **Async Processing**: Concurrent processing for efficient scraping and embedding generation
 - **Error Handling**: Comprehensive logging and graceful failure handling
 
@@ -65,18 +69,45 @@ create table public.products (
 
 2. **Run the Scraper**:
    ```bash
-   python run_scraper.py
+   python cli.py
    ```
 
-   Or run directly:
+   Or with options:
    ```bash
-   python bershka_scraper.py
+   python cli.py --limit 100  # Test with 100 products
+   python cli.py --help       # See all options
    ```
 
-3. **Test the Scraper**:
+3. **Test Individual Components**:
    ```bash
-   python test_scraper.py
+   python test_limited.py     # Test with 10 products
+   python test_scraper.py     # Test original scraper
    ```
+
+## 🏗️ **Architecture**
+
+The scraper uses a modular, production-ready architecture inspired by enterprise scraping systems:
+
+```
+├── cli.py              # Command-line interface and main runner
+├── api_ingestor.py     # API data extraction with JMESPath
+├── transform.py        # Data transformation to Supabase schema
+├── embeddings.py       # Image embedding generation (SigLIP)
+├── http_client.py      # Polite HTTP client with robots.txt support
+├── db.py              # Supabase database operations
+├── config.py          # Configuration management
+├── sites.yaml         # Site-specific configurations
+└── bershka_scraper.py # Legacy single-file scraper (for reference)
+```
+
+### **Key Components:**
+
+- **CLI Interface**: `python cli.py --limit 100` for testing
+- **API Ingestor**: Uses JMESPath for robust JSON data extraction
+- **Data Transform**: Maps API responses to your Supabase schema
+- **Embedding Service**: Generates 768-dim SigLIP image embeddings
+- **HTTP Client**: Polite requests with robots.txt compliance
+- **Database Layer**: Optimized Supabase operations with deduplication
 
 ## 🤖 **GitHub Actions Automation**
 
