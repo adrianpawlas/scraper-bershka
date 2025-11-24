@@ -19,7 +19,7 @@ except ImportError:
     from embeddings import get_image_embedding
 
 
-def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, limit: int = 0) -> int:
+def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env: Dict[str, str], limit: int = 0) -> int:
     """Scrape products for a single site."""
     brand = site.get("brand", "Unknown")
     merchant = site.get("merchant", brand)
@@ -94,9 +94,14 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, limit: in
             collected.append(row)
 
     if collected:
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: processed {len(collected)} products, upserting to database...")
-        db.upsert_products(collected)
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: database operations completed")
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: processed {len(collected)} products")
+        if supa_env["url"] and supa_env["key"]:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: upserting to database...")
+            db.upsert_products(collected)
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: database operations completed")
+        else:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: skipping database upsert (credentials not set)")
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: to enable database operations, set SUPABASE_URL and SUPABASE_KEY environment variables")
 
     return len(collected)
 
@@ -126,7 +131,7 @@ def main() -> None:
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Processing Bershka...")
 
     start_time = datetime.now()
-    site_count = run_for_site(sites[0], session, db, limit=args.limit)
+    site_count = run_for_site(sites[0], session, db, supa_env, limit=args.limit)
     end_time = datetime.now()
     duration = (end_time - start_time).total_seconds()
 
