@@ -1,6 +1,8 @@
 from typing import Any, Dict, List
 import re
 
+# No external imports needed for this module
+
 
 def _normalize_availability(raw_availability: Any) -> str:
     """Normalize availability to one of: 'in_stock', 'out_of_stock', 'unknown'."""
@@ -59,7 +61,11 @@ def to_supabase_row(raw: Dict[str, Any]) -> Dict[str, Any]:
     row["brand"] = raw.get("brand") or "Bershka"
     row["price"] = raw.get("price")
     row["currency"] = raw.get("currency") or "EUR"
-    row["image_url"] = raw.get("image_url")
+    # Fix relative image URLs for Bershka
+    image_url = raw.get("image_url")
+    if image_url and image_url.startswith('/'):
+        image_url = f"https://static.bershka.net{image_url}"
+    row["image_url"] = image_url
     row["product_url"] = raw.get("product_url")
     row["affiliate_url"] = raw.get("affiliate_url")
 
