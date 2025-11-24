@@ -78,6 +78,42 @@ create table public.products (
    python test_scraper.py
    ```
 
+## 🤖 **GitHub Actions Automation**
+
+The scraper includes automated daily runs via GitHub Actions:
+
+### **Daily Schedule**
+- **Runs automatically** every day at midnight UTC
+- **12-hour timeout** to prevent runaway processes
+- **Full scrape** by default
+
+### **Manual Runs**
+- Go to GitHub repository → Actions → "Scrape Bershka Products"
+- Click "Run workflow" to trigger manually
+- Choose between "full" or "test" mode
+
+### **GitHub Setup Required**
+
+#### **Repository Secrets** (Settings → Secrets and variables → Actions):
+```
+SUPABASE_URL = your_supabase_project_url
+SUPABASE_KEY = your_supabase_anon_key
+```
+
+#### **Repository Variables** (Settings → Secrets and variables → Actions → Variables):
+```
+BATCH_SIZE = 50          # Optional, defaults to 50
+MAX_WORKERS = 5          # Optional, defaults to 5
+```
+
+### **Workflow Features**
+- ✅ **Automatic execution** at midnight UTC daily
+- ✅ **Manual trigger** option
+- ✅ **Test mode** for quick validation
+- ✅ **Log upload** on failures for debugging
+- ✅ **12-hour timeout** protection
+- ✅ **Dependency caching** for faster runs
+
 ## Configuration
 
 ### Categories Scraped
