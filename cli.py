@@ -44,56 +44,30 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             except Exception:
                 pass
 
-        # First, discover product IDs from category pages
-        category_urls = []
-        for ep in api_conf.get("endpoints", []):
-            # Convert API endpoints to HTML category URLs
-            if 'categoryId=' in ep:
-                category_id = ep.split('categoryId=')[1].split('&')[0]
-                # Create HTML category URL
-                html_url = f"https://www.bershka.com/us/category/{category_id}.html"
-                category_urls.append(html_url)
-
-        print(f"Discovering product IDs from {len(category_urls)} category pages...")
-        category_product_ids = discover_product_ids_for_categories(session, category_urls, request_kwargs.get("headers"))
-
-        # Now use the discovered product IDs to call the API
+        # Use the endpoints directly - they already contain the working productIds
         products = []
-        for ep in api_conf.get("endpoints", []):
+        endpoints = api_conf.get("endpoints", [])
+        if debug:
+            print(f"Debug: Found {len(endpoints)} endpoints")
+
+        for ep in endpoints:
             try:
-                if 'categoryId=' in ep:
-                    category_id = ep.split('categoryId=')[1].split('&')[0]
-                    product_ids = category_product_ids.get(category_id, [])
+                if debug:
+                    print(f"Debug: Processing endpoint: {ep[:150]}...")
+                    print(f"Debug: Full endpoint length: {len(ep)}")
 
-                    if not product_ids:
-                        print(f"No product IDs found for category {category_id}, skipping")
-                        continue
-
-                    # Split product IDs into batches (API might have limits)
-                    batch_size = 50
-                    for i in range(0, len(product_ids), batch_size):
-                        batch_ids = product_ids[i:i + batch_size]
-                        batch_url = f"{ep.split('&')[0]}&productIds={','.join(batch_ids)}"
-
-                        if debug:
-                            print(f"Debug: Processing batch {i//batch_size + 1} for category {category_id}: {len(batch_ids)} products")
-                            print(f"Debug: URL: {batch_url[:150]}...")
-
-                        batch = ingest_api(
-                            session,
-                            batch_url,
-                            api_conf["items_path"],
-                            api_conf["field_map"],
-                            request_kwargs,
-                            debug,
-                        )
-                        if batch:
-                            products.extend(batch)
-                            if limit and len(products) >= limit:
-                                products = products[:limit]
-                                break
-
+                batch = ingest_api(
+                    session,
+                    ep,
+                    api_conf["items_path"],
+                    api_conf["field_map"],
+                    request_kwargs,
+                    debug,
+                )
+                if batch:
+                    products.extend(batch)
                     if limit and len(products) >= limit:
+                        products = products[:limit]
                         break
 
             except Exception as e:
