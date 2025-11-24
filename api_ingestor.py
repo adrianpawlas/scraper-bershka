@@ -69,41 +69,41 @@ def ingest_api(session: PoliteSession, endpoint: str, jmes_items: Any, field_map
 	with_image = 0
 
 	for item in items:
-        prod = flatten_product(item, field_map)
+		prod = flatten_product(item, field_map)
 
-        # Preserve full original item for downstream metadata storage
-        try:
-            prod["_raw_item"] = item
-            prod["_meta"] = {"source": "api", "endpoint": endpoint}
-        except Exception:
-            pass
+		# Preserve full original item for downstream metadata storage
+		try:
+			prod["_raw_item"] = item
+			prod["_meta"] = {"source": "api", "endpoint": endpoint}
+		except Exception:
+			pass
 
-        # Ensure at least an identifier exists
-        if not (prod.get("external_id") or prod.get("product_id")):
-            continue
+		# Ensure at least an identifier exists
+		if not (prod.get("external_id") or prod.get("product_id")):
+			continue
 
-        with_id += 1
+		with_id += 1
 
-        # Skip if required fields (like image_url) are missing
-        if "image_url" in field_map and not prod.get("image_url"):
-            continue
+		# Skip if required fields (like image_url) are missing
+		if "image_url" in field_map and not prod.get("image_url"):
+			continue
 
-        with_image += 1
+		with_image += 1
 
-        products.append(prod)
+		products.append(prod)
 
-    if debug:
-        try:
-            print(f"Debug: matched {len(items)} items; with_id={with_id}; with_image={with_image}")
-            if items:
-                # print available keys from first item to refine mapping
-                first = items[0]
-                if isinstance(first, dict):
-                    print(f"Debug: first item keys: {list(first.keys())[:15]}")
-        except Exception:
-            pass
+	if debug:
+		try:
+			print(f"Debug: matched {len(items)} items; with_id={with_id}; with_image={with_image}")
+			if items:
+				# print available keys from first item to refine mapping
+				first = items[0]
+				if isinstance(first, dict):
+					print(f"Debug: first item keys: {list(first.keys())[:15]}")
+		except Exception:
+			pass
 
-    return products
+	return products
 
 
 def discover_category_urls(session: PoliteSession, categories_conf: Dict[str, Any], request_kwargs: Optional[Dict[str, Any]] = None) -> List[str]:
