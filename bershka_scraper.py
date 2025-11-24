@@ -380,11 +380,20 @@ class BershkaScraper:
         all_products = []
 
         try:
-            if product_ids:
-                # Use the complete product ID list from the config
-                data = await self.fetch_products_batch(category_id, product_ids)
+            # Try to get ALL products from the category with pagination support
+            logger.info(f"Fetching ALL products from category {category_name} with pagination...")
 
-                if data.get('products'):
+            # Try multiple pages to get all products
+            max_pages = 50  # Try up to 50 pages to get all products
+            products_found = False
+
+            for page in range(max_pages):
+                data = await self.fetch_products_batch(category_id, page=page)
+
+                if data.get('products') and len(data['products']) > 0:
+                    products_found = True
+                    logger.info(f"Page {page}: got {len(data['products'])} products from category {category_name}")
+
                     for product in data['products']:
                         product_data = self.extract_product_info(product)
                         all_products.extend(product_data)
@@ -392,27 +401,34 @@ class BershkaScraper:
                         # Respect product limit during extraction
                         if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
                             break
-            else:
-                logger.warning(f"No product IDs provided for category {category_name}. Skipping.")
 
-            if sample_product_ids:
-                # Fetch products with the sample IDs
-                product_ids_to_fetch = sample_product_ids[:min(20, PRODUCT_LIMIT if PRODUCT_LIMIT > 0 else 20)]
-                data = await self.fetch_products_batch(category_id, product_ids_to_fetch)
+                    # If we got products but very few, it might be the last page
+                    if len(data['products']) < 10:  # Assume less than 10 means last page
+                        logger.info(f"Reached end of pagination at page {page}")
+                        break
+                else:
+                    # No more products on this page
+                    logger.info(f"No more products found at page {page}, stopping pagination")
+                    break
 
-                if data.get('products'):
-                    for product in data['products']:
-                        product_data = self.extract_product_info(product)
-                        all_products.extend(product_data)
+                # Check if we've hit the product limit
+                if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
+                    logger.info(f"Reached product limit of {PRODUCT_LIMIT}, stopping pagination")
+                    break
 
-                        # Respect product limit during extraction
-                        if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
-                            break
+            if not products_found:
+                # Fallback: if no products returned through pagination, try with the provided product IDs
+                logger.warning(f"No products found through pagination for category {category_name}, trying with provided product IDs")
+                if product_ids:
+                    data = await self.fetch_products_batch(category_id, product_ids)
+                    if data.get('products'):
+                        for product in data['products']:
+                            product_data = self.extract_product_info(product)
+                            all_products.extend(product_data)
 
-            else:
-                # Try to find product IDs by searching or using a different endpoint
-                # For now, we'll use a placeholder approach
-                logger.warning(f"No product IDs provided for category {category_name}. Skipping.")
+                            # Respect product limit during extraction
+                            if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
+                                break
 
         except Exception as e:
             logger.error(f"Error scraping category {category_name}: {e}")
@@ -474,12 +490,11 @@ class BershkaScraper:
         all_products = []
         seen_product_urls = set()  # Track unique product URLs to avoid duplicates
 
-        # Scrape men's categories using complete product ID lists
+        # Scrape men's categories - get ALL products from each category
         for category_name, category_data in CATEGORY_IDS['men'].items():
             category_id = category_data['category_id']
-            product_ids = category_data['product_ids']
 
-            products = await self.scrape_category(f"men_{category_name}", category_id, product_ids)
+            products = await self.scrape_category(f"men_{category_name}", category_id)
 
             # Filter out duplicates
             for product in products:
@@ -498,9 +513,8 @@ class BershkaScraper:
         if PRODUCT_LIMIT == 0 or len(all_products) < PRODUCT_LIMIT:
             for category_name, category_data in CATEGORY_IDS['women'].items():
                 category_id = category_data['category_id']
-                product_ids = category_data['product_ids']
 
-                products = await self.scrape_category(f"women_{category_name}", category_id, product_ids)
+                products = await self.scrape_category(f"women_{category_name}", category_id)
 
                 # Filter out duplicates
                 for product in products:
