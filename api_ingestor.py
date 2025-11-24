@@ -64,11 +64,11 @@ def ingest_api(session: PoliteSession, endpoint: str, jmes_items: Any, field_map
 				print(f"Debug: Failed items_path '{ip}': {e}")
 			continue
 
-    products: List[Dict[str, Any]] = []
-    with_id = 0
-    with_image = 0
+	products: List[Dict[str, Any]] = []
+	with_id = 0
+	with_image = 0
 
-    for item in items:
+	for item in items:
         prod = flatten_product(item, field_map)
 
         # Preserve full original item for downstream metadata storage
