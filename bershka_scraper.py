@@ -327,24 +327,38 @@ class BershkaScraper:
             # Open image
             image = Image.open(io.BytesIO(image_data)).convert('RGB')
 
-            # Process with SigLIP
-            inputs = self.processor(images=image, return_tensors="pt")
+            # Process with SigLIP - need both image and text inputs
+            inputs = self.processor(
+                images=image,
+                text=[""],  # Empty text input
+                return_tensors="pt",
+                padding=True
+            )
 
             with torch.no_grad():
                 outputs = self.model(**inputs)
 
             # Get the image embeddings (768-dim)
-            # SigLIP returns image_embeds directly
             if hasattr(outputs, 'image_embeds'):
                 embedding = outputs.image_embeds.squeeze().tolist()
             else:
-                # Fallback: try pooler_output
-                embedding = outputs.pooler_output.squeeze().tolist()
+                # Fallback: try pooler_output or last_hidden_state
+                if hasattr(outputs, 'pooler_output'):
+                    embedding = outputs.pooler_output.squeeze().tolist()
+                elif hasattr(outputs, 'last_hidden_state'):
+                    embedding = outputs.last_hidden_state.mean(dim=1).squeeze().tolist()
+                else:
+                    logger.error("No suitable embedding output found")
+                    return None
 
             # Ensure it's a list of floats
             if isinstance(embedding, float):
                 return [embedding]
-            return embedding
+            elif isinstance(embedding, list):
+                return embedding
+            else:
+                # Convert numpy array or tensor to list
+                return embedding.tolist()
 
         except Exception as e:
             logger.error(f"Error processing image embedding: {e}")
@@ -395,14 +409,12 @@ class BershkaScraper:
         processed_products = []
 
         for product in products:
-            # Generate embedding (temporarily disabled for testing)
+            # Generate embedding
             if product['image_url']:
-                # Temporarily skip embedding generation for testing
-                # embedding = await self.generate_embedding(product['image_url'])
-                # if embedding:
-                #     product['embedding'] = embedding
-                product['embedding'] = None  # Placeholder for testing
-                processed_products.append(product)
+                embedding = await self.generate_embedding(product['image_url'])
+                if embedding:
+                    product['embedding'] = embedding
+                    processed_products.append(product)
 
         return processed_products
 
