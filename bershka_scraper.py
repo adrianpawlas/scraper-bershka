@@ -373,61 +373,27 @@ class BershkaScraper:
             logger.error(f"Error processing image embedding: {e}")
             return None
 
-    async def scrape_category(self, category_name: str, category_id: int, sample_product_ids: List[int] = None) -> List[Dict[str, Any]]:
-        """Scrape all products from a specific category."""
-        logger.info(f"Starting to scrape category: {category_name} (ID: {category_id})")
+    async def scrape_category(self, category_name: str, category_id: int, product_ids: List[int] = None) -> List[Dict[str, Any]]:
+        """Scrape all products from a specific category using the provided product IDs."""
+        logger.info(f"Starting to scrape category: {category_name} (ID: {category_id}) with {len(product_ids or [])} product IDs")
 
         all_products = []
 
         try:
-            # Try to get all products from category first (without product IDs)
-            if not sample_product_ids:
-                logger.info(f"Trying to fetch all products from category {category_name} without product IDs")
+            if product_ids:
+                # Use the complete product ID list from the config
+                data = await self.fetch_products_batch(category_id, product_ids)
 
-                # Try multiple pages to get more products
-                max_pages = 10  # Try up to 10 pages
-                products_found = False
+                if data.get('products'):
+                    for product in data['products']:
+                        product_data = self.extract_product_info(product)
+                        all_products.extend(product_data)
 
-                for page in range(max_pages):
-                    data = await self.fetch_products_batch(category_id, page=page)
-
-                    if data.get('products') and len(data['products']) > 0:
-                        products_found = True
-                        logger.info(f"Page {page}: got {len(data['products'])} products from category {category_name}")
-
-                        for product in data['products']:
-                            product_data = self.extract_product_info(product)
-                            all_products.extend(product_data)
-
-                            # Respect product limit during extraction
-                            if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
-                                break
-
-                        # If we got products but fewer than expected, try next page
-                        if len(data['products']) < 50:  # Assume less than 50 means last page
+                        # Respect product limit during extraction
+                        if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
                             break
-                    else:
-                        # No more products on this page
-                        break
-
-                if products_found and len(all_products) > 0:
-                    logger.info(f"Successfully got {len(all_products)} total products from category {category_name} across pages")
-                else:
-                    # Fallback to sample product IDs
-                    logger.info(f"No products returned for category {category_name} across pages, using sample product IDs")
-                    if PRODUCT_LIMIT > 0:
-                        # Testing mode - use sample product IDs
-                        if 'men' in category_name:
-                            sample_product_ids = [199850199, 200346172, 200711323, 203971838, 201304218, 204544074, 205222885, 204203891, 204203890, 203677704, 202812583, 202680979, 202411683, 202238171, 201967673, 201927866, 201129538, 201096327, 201096326, 201096315]
-                        else:
-                            sample_product_ids = [201665294, 199061499, 189277126, 189975385, 190668687, 189836542, 198409429, 191849717, 196700066, 196700067, 190668686, 205025006, 189276745, 196951849, 194635088, 189277174, 202797791, 190668688, 196951862, 196951861]
-                    else:
-                        # Production mode - use expanded set of sample product IDs
-                        sample_product_ids = [199850199, 200346172, 200711323, 203971838, 201304218,
-                                             204544074, 205222885, 204203891, 204203890, 203677704,
-                                             202812583, 202680979, 202411683, 202238171, 201967673,
-                                             201927866, 201129538, 201096327, 201096326, 201096315,
-                                             201665294, 199061499, 189277126, 189975385, 190668687]
+            else:
+                logger.warning(f"No product IDs provided for category {category_name}. Skipping.")
 
             if sample_product_ids:
                 # Fetch products with the sample IDs
@@ -508,9 +474,12 @@ class BershkaScraper:
         all_products = []
         seen_product_urls = set()  # Track unique product URLs to avoid duplicates
 
-        # Scrape men's categories
-        for category_name, category_id in CATEGORY_IDS['men'].items():
-            products = await self.scrape_category(f"men_{category_name}", category_id)
+        # Scrape men's categories using complete product ID lists
+        for category_name, category_data in CATEGORY_IDS['men'].items():
+            category_id = category_data['category_id']
+            product_ids = category_data['product_ids']
+
+            products = await self.scrape_category(f"men_{category_name}", category_id, product_ids)
 
             # Filter out duplicates
             for product in products:
@@ -527,8 +496,11 @@ class BershkaScraper:
 
         # Scrape women's categories (if we haven't reached the limit)
         if PRODUCT_LIMIT == 0 or len(all_products) < PRODUCT_LIMIT:
-            for category_name, category_id in CATEGORY_IDS['women'].items():
-                products = await self.scrape_category(f"women_{category_name}", category_id)
+            for category_name, category_data in CATEGORY_IDS['women'].items():
+                category_id = category_data['category_id']
+                product_ids = category_data['product_ids']
+
+                products = await self.scrape_category(f"women_{category_name}", category_id, product_ids)
 
                 # Filter out duplicates
                 for product in products:
