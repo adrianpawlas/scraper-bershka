@@ -47,15 +47,13 @@ jobs:
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-        BATCH_SIZE: ${{ vars.BATCH_SIZE || 50 }}
-        MAX_WORKERS: ${{ vars.MAX_WORKERS || 5 }}
       run: |
         if [ "${{ github.event.inputs.scrape_mode }}" = "test" ] || [ "${{ github.event_name }}" = "schedule" ]; then
-          echo "Running in test mode..."
-          python test_scraper.py
+          echo "Running in test mode with 10 products..."
+          python cli.py --limit 10
         else
           echo "Running full scrape..."
-          python run_scraper.py
+          python cli.py
         fi
 
     - name: Upload logs on failure
