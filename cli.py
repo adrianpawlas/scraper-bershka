@@ -43,8 +43,17 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, limit: in
                 pass
 
         products = []
-        for ep in api_conf.get("endpoints", []):
+        endpoints = api_conf.get("endpoints", [])
+        if debug:
+            print(f"Debug: Found {len(endpoints)} endpoints")
+            if endpoints:
+                print(f"Debug: First endpoint: {endpoints[0][:100]}...")
+
+        for ep in endpoints:
             try:
+                if debug:
+                    print(f"Debug: Processing endpoint: {ep[:150]}...")
+                    print(f"Debug: Full endpoint length: {len(ep)}")
                 batch = ingest_api(
                     session,
                     ep,
@@ -102,62 +111,9 @@ def main() -> None:
     supa_env = get_supabase_env()
     db = SupabaseREST(url=supa_env["url"], key=supa_env["key"])
 
-    # Load Bershka site configuration
-    sites = [{
-        "brand": "Bershka",
-        "merchant": "Bershka",
-        "source": "scraper",
-        "country": "us",
-        "debug": True,
-        "respect_robots": False,
-        "api": {
-            "endpoints": [
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010834564",  # men's all products
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193212",  # women's jackets & trench
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010240019",  # women's coats
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010276029",  # women's jeans
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193216",  # women's pants
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193213",  # women's dresses & jumpsuit
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193223",  # women's sweaters & cardigans
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193222",  # women's sweatshirts & hoodies
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193220",  # women's tops & bodysuits
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193217",  # women's tshirts
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193221",  # women's shirts & blouses
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010280023",  # women's skirts
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010194517",  # women's shorts & jorts
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010429555",  # women's matching sets
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010361506",  # women's swimwear
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193192",  # women's shoes
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193138",  # women's bags & coin purses
-                "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193134",  # women's accessories
-            ],
-            "items_path": "products",
-            "field_map": {
-                "external_id": "id",
-                "product_id": "id",
-                "title": ["nameEn", "name"],
-                "description": ["bundleProductSummaries[0].detail.longDescription", "bundleProductSummaries[0].detail.description"],
-                "gender": "bundleProductSummaries[0].sectionNameEN",
-                "price": "bundleProductSummaries[0].detail.colors[0].sizes[0].price",
-                "currency": "'EUR'",
-                "image_url": "bundleProductSummaries[0].detail.colors[0].image.url",
-                "product_url": "bundleProductSummaries[0].productUrl",
-                "brand": "'Bershka'",
-                "sizes": "bundleProductSummaries[0].detail.colors[0].sizes[].name"
-            },
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-                "Accept": "application/json, text/plain, */*",
-                "Accept-Language": "en-GB,en;q=0.9"
-            },
-            "debug": True,
-            "prewarm": [
-                "https://www.bershka.com/us/",
-                "https://www.bershka.com/us/men.html",
-                "https://www.bershka.com/us/women.html"
-            ]
-        }
-    }]
+    # Load site configuration from sites.yaml
+    from config import load_sites_config
+    sites = load_sites_config("sites.yaml")
 
     # Setup session
     session = PoliteSession(default_headers={
