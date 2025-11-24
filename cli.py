@@ -2,12 +2,21 @@ import argparse
 from datetime import datetime
 from typing import Dict, List
 
-from .config import load_env, get_supabase_env
-from .http_client import PoliteSession
-from .db import SupabaseREST
-from .api_ingestor import ingest_api
-from .transform import to_supabase_row
-from .embeddings import get_image_embedding
+try:
+    from .config import load_env, get_supabase_env
+    from .http_client import PoliteSession
+    from .db import SupabaseREST
+    from .api_ingestor import ingest_api
+    from .transform import to_supabase_row
+    from .embeddings import get_image_embedding
+except ImportError:
+    # Fallback for direct execution
+    from config import load_env, get_supabase_env
+    from http_client import PoliteSession
+    from db import SupabaseREST
+    from api_ingestor import ingest_api
+    from transform import to_supabase_row
+    from embeddings import get_image_embedding
 
 
 def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, limit: int = 0) -> int:

@@ -3,7 +3,10 @@ from bs4 import BeautifulSoup
 
 import jmespath
 
-from .http_client import PoliteSession
+try:
+    from .http_client import PoliteSession
+except ImportError:
+    from http_client import PoliteSession
 
 
 def flatten_product(item: Dict[str, Any], mapping: Dict[str, Any]) -> Dict[str, Any]:

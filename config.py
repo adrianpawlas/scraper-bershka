@@ -1,7 +1,13 @@
 import os
 from typing import Dict, List, Any
-from dotenv import load_dotenv
-import yaml
+try:
+    from dotenv import load_dotenv
+    import yaml
+except ImportError:
+    # Fallback if packages not available
+    def load_dotenv():
+        pass
+    yaml = None
 
 
 def load_env():
