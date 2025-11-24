@@ -6,3 +6,4 @@ Pillow
 tqdm
 python-dotenv
 aiohttp
+psycopg2-binary
