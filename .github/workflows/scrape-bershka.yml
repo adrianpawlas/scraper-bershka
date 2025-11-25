@@ -48,7 +48,7 @@ jobs:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
-        if [ "${{ github.event.inputs.scrape_mode }}" = "test" ] || [ "${{ github.event_name }}" = "schedule" ]; then
+        if [ "${{ github.event.inputs.scrape_mode }}" = "test" ]; then
           echo "Running in test mode with 10 products..."
           python -m cli --limit 10
         else
