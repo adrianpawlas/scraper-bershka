@@ -88,16 +88,24 @@ def to_supabase_row(raw: Dict[str, Any]) -> Dict[str, Any]:
     # Set second_hand to FALSE for all current brands (they are not second-hand marketplaces)
     row["second_hand"] = False
 
-    # Normalize gender to "MAN" or "WOMAN" for Bershka
+    # Use gender from category config (set in cli.py)
+    # This ensures women's products get "WOMAN" and men's products get "MAN"
     raw_gender = raw.get("gender")
     if raw_gender:
         gender_str = str(raw_gender).strip().upper()
-        if any(word in gender_str for word in ["MEN", "MAN", "MALE", "GUY", "BOY"]):
+        # If already correctly set to MAN or WOMAN, use it
+        if gender_str == "MAN" or gender_str == "WOMAN":
+            row["gender"] = gender_str
+        # Otherwise normalize
+        elif any(word in gender_str for word in ["MEN", "MAN", "MALE", "GUY", "BOY"]):
             row["gender"] = "MAN"
         elif any(word in gender_str for word in ["WOMEN", "WOMAN", "FEMALE", "LADY", "GIRL"]):
             row["gender"] = "WOMAN"
         else:
             row["gender"] = gender_str  # Keep original if doesn't match
+    else:
+        # No gender provided - leave as None
+        row["gender"] = None
 
     # Category is set by cli.py based on the category config
     # If not set, default to None (clothing)

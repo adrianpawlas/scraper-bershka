@@ -1,10 +1,7 @@
 name: Scrape Bershka Products
 
 on:
-  # Run daily at midnight UTC (adjust timezone as needed)
-  schedule:
-    - cron: '0 0 * * *'
-  # Allow manual runs
+  # Manual runs only (no scheduled runs)
   workflow_dispatch:
     inputs:
       scrape_mode:
