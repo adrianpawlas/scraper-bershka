@@ -1,0 +1,1869 @@
+{
+    "gridElements": [
+      {
+        "id": "4ec69bfe-c98a-4a11-b9a1-73dfa8a24a56-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [191107022],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 191107022,
+            "defaultImageType": "6896407711_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "308b2a90-fbca-4747-95ac-1b45a5090530-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [189277173],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189277173,
+            "defaultImageType": "6893741807_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "308b2a90-fbca-4747-95ac-1b45a5090530-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-1",
+        "template": "2D",
+        "ccIds": [204042832, 189277172],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 204042832,
+            "defaultImageType": "6893741717_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 189277172,
+            "defaultImageType": "6893741717_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "308b2a90-fbca-4747-95ac-1b45a5090530-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-2",
+        "template": "2D",
+        "ccIds": [202798264, 189277171],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 202798264,
+            "defaultImageType": "6893741800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 189277171,
+            "defaultImageType": "6893741800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "ba181142-ef0a-4f0c-9d09-2a62af8d94f1-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [189276786],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189276786,
+            "defaultImageType": "1688741716_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "ba181142-ef0a-4f0c-9d09-2a62af8d94f1-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-1",
+        "template": "2D",
+        "ccIds": [202798279, 189276784],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 202798279,
+            "defaultImageType": "1688741800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 189276784,
+            "defaultImageType": "1688741800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "ba181142-ef0a-4f0c-9d09-2a62af8d94f1-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-2",
+        "template": "2D",
+        "ccIds": [189276782, 189276785],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189276782,
+            "defaultImageType": "1688741774_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 189276785,
+            "defaultImageType": "1688741803_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "ccIds": [190966805],
+        "type": "CC",
+        "commercialComponentIds": [
+          {
+            "ccId": 190966805,
+            "defaultImageType": "6895730548_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "849b1a5c-cad1-41a4-b365-0ff5f0cdeaae-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [195184008],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 195184008,
+            "defaultImageType": "6906551800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "83c8e2b0-64d2-44c4-a979-ce65f7b33bba-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [191567193, 191567194],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 191567193,
+            "defaultImageType": "6898741712_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 191567194,
+            "defaultImageType": "6898741800_2_2_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "7af49218-fa5a-49e0-a2de-004a51679d48-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "3C",
+        "ccIds": [197287397, 194635099, 194635098],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 197287397,
+            "defaultImageType": "6901759800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 194635099,
+            "defaultImageType": "6901759507_2_2_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 194635098,
+            "defaultImageType": "6901759401_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "90f31243-cb5f-41f5-8b94-334d147bf105-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [189836544, 189836543],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189836544,
+            "defaultImageType": "6894758725_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 189836543,
+            "defaultImageType": "6894758800_2_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "58de326a-9c23-42d4-9e4c-c60a9feead5c-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [189836529, 189907073],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189836529,
+            "defaultImageType": "6892752700_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 189907073,
+            "defaultImageType": "6892752800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "781c24d7-7427-40cc-843b-8aa1dfc2404c-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [206080611, 189277147],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 206080611,
+            "defaultImageType": "6891200724_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 189277147,
+            "defaultImageType": "6891200724_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "781c24d7-7427-40cc-843b-8aa1dfc2404c-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-1",
+        "template": "1A",
+        "ccIds": [189277145],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189277145,
+            "defaultImageType": "6891200754_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "781c24d7-7427-40cc-843b-8aa1dfc2404c-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-2",
+        "template": "2D",
+        "ccIds": [196513966, 189277146],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 196513966,
+            "defaultImageType": "6891200401_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 189277146,
+            "defaultImageType": "6891200800_2_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "937b62a9-251c-40d8-bfb3-9be836c5ad48-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [204043243],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 204043243,
+            "defaultImageType": "6896407700_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "b796ea14-6350-4350-84fb-bbf0f5658236-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [191245237],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 191245237,
+            "defaultImageType": "6897200814_2_2_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "b796ea14-6350-4350-84fb-bbf0f5658236-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-1",
+        "template": "2D",
+        "ccIds": [191107025, 193036802],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 191107025,
+            "defaultImageType": "6897200800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 193036802,
+            "defaultImageType": "6897200802_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "aafcb771-ad04-402a-9ce3-9bed076d275b-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [189277214, 190425491],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189277214,
+            "defaultImageType": "6890718800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 190425491,
+            "defaultImageType": "6890718555_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "666efdfb-dc9c-426c-9fd5-03a92d770cd7-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [196958056, 196958055],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 196958056,
+            "defaultImageType": "1682752806_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 196958055,
+            "defaultImageType": "1682752743_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "da9ef312-0be4-40e9-8daa-8cca8d788099-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [193182114],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 193182114,
+            "defaultImageType": "6640109717_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "5de3a67c-c820-4018-85af-7c08ce0ceb8f-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [207374428, 195184000],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 207374428,
+            "defaultImageType": "6902759605_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 195184000,
+            "defaultImageType": "6902759605_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "4a660cd8-6cdf-4dea-a118-f897674291b3-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [195183997],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 195183997,
+            "defaultImageType": "6896407700_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "4a0cc1c4-3b65-4be0-b080-d2a45f52797b-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [193200760],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 193200760,
+            "defaultImageType": "6903407732_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "3a9ff872-5510-42b3-ac08-d9abdae36fc6-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [196539604],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 196539604,
+            "defaultImageType": "6907450800_2_2_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "340f77a3-1866-4c2f-ada0-aa16931df46d-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [193334216],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 193334216,
+            "defaultImageType": "6899707800_4_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "245b13b0-b01f-4802-b1a5-661f53283fef-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [195183998],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 195183998,
+            "defaultImageType": "6905551800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "106613f7-9c6b-4086-a8fc-0518c9e7fc8b-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [195183999],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 195183999,
+            "defaultImageType": "6904407250_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "063701d0-7ad0-4c89-baa3-c5149d84cec8-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [202798073],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 202798073,
+            "defaultImageType": "6891200724_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "5313c303-6af4-4fa9-b195-635b0f1bd8b9-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [189277126],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189277126,
+            "defaultImageType": "6612407800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "64f1b3f7-dca3-43a2-8c45-7eab7817529e-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [196958508],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 196958508,
+            "defaultImageType": "1412407776_2_2_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "c03291a5-68c5-4d3a-a055-a271394241a4-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [189276732],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189276732,
+            "defaultImageType": "6718551800_2_2_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "2d180ed2-92af-4e95-8b8f-8f30242af0c6-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [189836534],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189836534,
+            "defaultImageType": "6626109800_2_2_",
+            "zoom2": "6626109800_2_2_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "af841680-fb60-421f-bd87-b33efd106d18-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [189975385, 204042833],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189975385,
+            "defaultImageType": "6631730712_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 204042833,
+            "defaultImageType": "6631730712_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "af841680-fb60-421f-bd87-b33efd106d18-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-1",
+        "template": "1A",
+        "ccIds": [202226855],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 202226855,
+            "defaultImageType": "6631730712_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "17ad0af8-723c-42c8-a93f-62bc813117c5-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [194635089],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 194635089,
+            "defaultImageType": "6641407742_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "17ad0af8-723c-42c8-a93f-62bc813117c5-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-1",
+        "template": "2D",
+        "ccIds": [202797791, 190668688],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 202797791,
+            "defaultImageType": "6635407700_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 190668688,
+            "defaultImageType": "6635407700_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "c0a59008-cb3e-443a-b557-acf1e184604d-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [204043333, 190668687],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 204043333,
+            "defaultImageType": "6636407802_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 190668687,
+            "defaultImageType": "6636407802_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "f9f1558e-7634-492c-9cb8-2b55aff45d4c-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [207373576],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 207373576,
+            "defaultImageType": "2aeda5668b7549e9bb582359759af2ec",
+            "zoom2": "2aeda5668b7549e9bb582359759af2ec",
+            "zoom3": "2aeda5668b7549e9bb582359759af2ec",
+            "hiddenFields": [],
+            "mediaCompete": [],
+            "type": "Bundle",
+            "kind": "Marketing",
+            "xmedia": [
+              {
+                "path": "/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg",
+                "xmediaItems": [
+                  {
+                    "medias": [
+                      {
+                        "format": 1,
+                        "clazz": 1,
+                        "idMedia": "2aeda5668b7549e9bb582359759af2ec",
+                        "timestamp": 1762857238971,
+                        "extraInfo": {
+                          "originalName": "p1",
+                          "regions": [],
+                          "assetId": "2aeda5668b7549e9bb582359759af2ec",
+                          "deliveryUrl": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971",
+                          "deliveryPath": "/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971",
+                          "url": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971",
+                          "metaPath": "assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/meta.json"
+                        },
+                        "url": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971&w=:width:",
+                        "metaUrl": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/meta.json"
+                      },
+                      {
+                        "format": 1,
+                        "clazz": 1,
+                        "idMedia": "2aeda5668b7549e9bb582359759af2ec",
+                        "timestamp": 1762857238971,
+                        "extraInfo": {
+                          "originalName": "p1",
+                          "regions": [],
+                          "assetId": "2aeda5668b7549e9bb582359759af2ec",
+                          "deliveryUrl": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971",
+                          "deliveryPath": "/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971",
+                          "url": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971",
+                          "metaPath": "assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/meta.json"
+                        },
+                        "url": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971&w=:width:",
+                        "metaUrl": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/meta.json"
+                      },
+                      {
+                        "format": 1,
+                        "clazz": 1,
+                        "idMedia": "2aeda5668b7549e9bb582359759af2ec",
+                        "timestamp": 1762857238971,
+                        "extraInfo": {
+                          "originalName": "p1",
+                          "regions": [],
+                          "assetId": "2aeda5668b7549e9bb582359759af2ec",
+                          "deliveryUrl": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971",
+                          "deliveryPath": "/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971",
+                          "url": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971",
+                          "metaPath": "assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/meta.json"
+                        },
+                        "url": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/M0000000400-p/M0000000400-p.jpg?ts=1762857238971&w=:width:",
+                        "metaUrl": "https://static.bershka.net/assets/public/2aed/a566/8b7549e9bb58/2359759af2ec/meta.json"
+                      }
+                    ],
+                    "set": 1
+                  }
+                ],
+                "colorCode": "000",
+                "xmediaLocations": [
+                  {
+                    "locations": [
+                      {
+                        "mediaLocations": [
+                          "2aeda5668b7549e9bb582359759af2ec"
+                        ],
+                        "location": 0
+                      }
+                    ],
+                    "set": 1
+                  }
+                ]
+              }
+            ],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "f9f1558e-7634-492c-9cb8-2b55aff45d4c-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-1",
+        "template": "1A",
+        "ccIds": [207373577],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 207373577,
+            "defaultImageType": "aa6d407851ea4149b9a6a040d54a3b6e",
+            "zoom2": "aa6d407851ea4149b9a6a040d54a3b6e",
+            "zoom3": "aa6d407851ea4149b9a6a040d54a3b6e",
+            "hiddenFields": [],
+            "mediaCompete": [],
+            "type": "Bundle",
+            "kind": "Marketing",
+            "xmedia": [
+              {
+                "path": "/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg",
+                "xmediaItems": [
+                  {
+                    "medias": [
+                      {
+                        "format": 1,
+                        "clazz": 1,
+                        "idMedia": "aa6d407851ea4149b9a6a040d54a3b6e",
+                        "timestamp": 1762857444464,
+                        "extraInfo": {
+                          "originalName": "p1",
+                          "regions": [],
+                          "assetId": "aa6d407851ea4149b9a6a040d54a3b6e",
+                          "deliveryUrl": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464",
+                          "deliveryPath": "/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464",
+                          "url": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464",
+                          "metaPath": "assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/meta.json"
+                        },
+                        "url": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464&w=:width:",
+                        "metaUrl": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/meta.json"
+                      },
+                      {
+                        "format": 1,
+                        "clazz": 1,
+                        "idMedia": "aa6d407851ea4149b9a6a040d54a3b6e",
+                        "timestamp": 1762857444464,
+                        "extraInfo": {
+                          "originalName": "p1",
+                          "regions": [],
+                          "assetId": "aa6d407851ea4149b9a6a040d54a3b6e",
+                          "deliveryUrl": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464",
+                          "deliveryPath": "/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464",
+                          "url": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464",
+                          "metaPath": "assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/meta.json"
+                        },
+                        "url": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464&w=:width:",
+                        "metaUrl": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/meta.json"
+                      },
+                      {
+                        "format": 1,
+                        "clazz": 1,
+                        "idMedia": "aa6d407851ea4149b9a6a040d54a3b6e",
+                        "timestamp": 1762857444464,
+                        "extraInfo": {
+                          "originalName": "p1",
+                          "regions": [],
+                          "assetId": "aa6d407851ea4149b9a6a040d54a3b6e",
+                          "deliveryUrl": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464",
+                          "deliveryPath": "/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464",
+                          "url": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464",
+                          "metaPath": "assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/meta.json"
+                        },
+                        "url": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/M0000000401-p/M0000000401-p.jpg?ts=1762857444464&w=:width:",
+                        "metaUrl": "https://static.bershka.net/assets/public/aa6d/4078/51ea4149b9a6/a040d54a3b6e/meta.json"
+                      }
+                    ],
+                    "set": 1
+                  }
+                ],
+                "colorCode": "000",
+                "xmediaLocations": [
+                  {
+                    "locations": [
+                      {
+                        "mediaLocations": [
+                          "aa6d407851ea4149b9a6a040d54a3b6e"
+                        ],
+                        "location": 0
+                      }
+                    ],
+                    "set": 1
+                  }
+                ]
+              }
+            ],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "ad73f5e5-1195-41b0-8f53-517aa2f1292d-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [190668686, 205025006],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 190668686,
+            "defaultImageType": "6636407811_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 205025006,
+            "defaultImageType": "6636407811_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "170583e1-8fa9-49f7-8c8d-1e300c099a02-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [207373968, 194635094],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 207373968,
+            "defaultImageType": "6643109505_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 194635094,
+            "defaultImageType": "6643109505_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "66c7bf1d-7a93-4f27-b820-50b17b14aa71-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [196700066, 196700067],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 196700066,
+            "defaultImageType": "6650758730_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 196700067,
+            "defaultImageType": "6650758802_2_3_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "ae5a7558-102b-45a3-8570-27a9ebfb60c3-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [189975386, 202226348],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189975386,
+            "defaultImageType": "6631730717_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 202226348,
+            "defaultImageType": "6631730717_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "fd177fad-5325-4c2c-bfac-b3f992522eec-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [198582781],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 198582781,
+            "defaultImageType": "6598074428_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "f619932b-5740-4e8d-86a6-0fdacbc0bfc3-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [193200759],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 193200759,
+            "defaultImageType": "6638407251_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "a92357e0-a417-4270-b65b-cb1f4d0c1349-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [205025003, 189907075],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 205025003,
+            "defaultImageType": "6626109700_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 189907075,
+            "defaultImageType": "6626109700_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "1bb19a62-505b-4ff7-bb52-5a457fb87a0f-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [189276851],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189276851,
+            "defaultImageType": "6603730711_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "1bb19a62-505b-4ff7-bb52-5a457fb87a0f-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-1",
+        "template": "2D",
+        "ccIds": [189276850, 189276852],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189276850,
+            "defaultImageType": "6603730722_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 189276852,
+            "defaultImageType": "6603730800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "231f9850-a13b-404c-944a-15849a68196a-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [189276632, 189276633],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 189276632,
+            "defaultImageType": "6604718711_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 189276633,
+            "defaultImageType": "6604718800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "c9a09e30-a788-42ad-b5e7-0886f307ad69-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "2D",
+        "ccIds": [207374427, 195318224],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 207374427,
+            "defaultImageType": "6724407902_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          },
+          {
+            "ccId": 195318224,
+            "defaultImageType": "6724407902_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "id": "ef73a50d-1bdc-46c4-a012-4a8997893d51-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [195303247],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 195303247,
+            "defaultImageType": "6718551902_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "a52e5886-2eb9-4498-8af9-66c318e2d20b-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [198582780],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 198582780,
+            "defaultImageType": "6598074800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "id": "9556dc74-e984-4caa-8ed2-03a77789ba7e-night-propagation-25-11-2025-PREWARMING_GLOBAL::MECCOLAC::COLABORACAMPAIGN::7782B221-E2D0-4B0D-9FAD-6F0E47B17114::PRO-0",
+        "template": "1A",
+        "ccIds": [190110934],
+        "type": "block",
+        "commercialComponentIds": [
+          {
+            "ccId": 190110934,
+            "defaultImageType": "6632551712_2_2_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      },
+      {
+        "ccIds": [205566875],
+        "type": "CC",
+        "commercialComponentIds": [
+          {
+            "ccId": 205566875,
+            "defaultImageType": "6718551902_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "ccIds": [204042849],
+        "type": "CC",
+        "commercialComponentIds": [
+          {
+            "ccId": 204042849,
+            "defaultImageType": "6632551712_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "ccIds": [202226788],
+        "type": "CC",
+        "commercialComponentIds": [
+          {
+            "ccId": 202226788,
+            "defaultImageType": "6604718711_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "ccIds": [200309589],
+        "type": "CC",
+        "commercialComponentIds": [
+          {
+            "ccId": 200309589,
+            "defaultImageType": "6718551800_1_1_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": true
+          }
+        ]
+      },
+      {
+        "ccIds": [200309114],
+        "type": "CC",
+        "commercialComponentIds": [
+          {
+            "ccId": 200309114,
+            "defaultImageType": "6718551711_2_2_",
+            "hiddenFields": [],
+            "isAddToCartDisabled": false,
+            "mediaCompete": [],
+            "type": "Product",
+            "kind": "Wear",
+            "xmedia": [],
+            "duplicateReference": false
+          }
+        ]
+      }
+    ],
+    "filters": {
+      "colFilter": [
+        {
+          "name": "G-GRIS",
+          "value": "Grey",
+          "productIds": [190668686, 196700067, 190668687, 205025006, 189277173, 193036802, 189276785, 196958056, 191245237, 204043333]
+        },
+        {
+          "name": "G-AZUL",
+          "value": "Blue",
+          "productIds": [194635098, 196513966, 198582781]
+        },
+        {
+          "name": "G-BEIGE",
+          "value": "Beige",
+          "productIds": [189277145, 202226855, 189276782, 191107022, 202226788, 189276851, 189836544, 204042833, 200309114, 189276632, 191567193, 190110934, 189975385, 204042849]
+        },
+        {
+          "name": "G-ROSA",
+          "value": "Pink",
+          "productIds": [195318224, 205566875, 195303247, 207374427]
+        },
+        {
+          "name": "G-MARRON",
+          "value": "Brown",
+          "productIds": [206080611, 191107022, 202226788, 189277147, 200309114, 193200760, 202226348, 194635089, 189277172, 196958055, 189277145, 196958508, 189276786, 189276782, 205025003, 189276851, 189836544, 189276632, 196700066, 202797791, 195183997, 190668688, 189907075, 189975386, 193182114, 202798073, 189836529, 204043243, 204042832, 189276850]
+        },
+        {
+          "name": "G-VERDE",
+          "value": "Green",
+          "productIds": [194635094, 190966805, 194635099, 207373968]
+        },
+        {
+          "name": "G-BLANCO",
+          "value": "White",
+          "productIds": [193200759, 195183999]
+        },
+        {
+          "name": "G-NEGRO",
+          "value": "Black",
+          "productIds": [189277126, 189276852, 193334216, 202798264, 189836543, 196539604, 200309589, 189277214, 195183998, 189836534, 189276784, 191107025, 191567194, 195184008, 189276633, 202798279, 189907073, 189277171, 198582780, 189277146, 189276732, 197287397]
+        },
+        {
+          "name": "G-ROJO",
+          "value": "Red",
+          "productIds": [207374428, 190425491, 195184000]
+        }
+      ],
+      "catFilter": [],
+      "maxPriceFilter": [
+        {
+          "price": "4000",
+          "productIds": [196700066, 196700067]
+        },
+        {
+          "price": "6000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785]
+        },
+        {
+          "price": "8000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785, 189276732, 189276632, 189276633, 195303247, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114, 191567193, 191567194, 196958056, 196958055]
+        },
+        {
+          "price": "10000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785, 189276732, 189276632, 189276633, 195303247, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114, 191567193, 191567194, 196958056, 196958055, 189277126, 206080611, 189277147, 189277145, 196513966, 189277146, 189277214, 190425491, 196539604, 202798073, 189836534, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 198582780]
+        },
+        {
+          "price": "12000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785, 189276732, 189276632, 189276633, 195303247, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114, 191567193, 191567194, 196958056, 196958055, 189277126, 206080611, 189277147, 189277145, 196513966, 189277146, 189277214, 190425491, 196539604, 202798073, 189836534, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 198582780, 196958508, 194635089, 189277173, 204042832, 189277172, 202798264, 189277171, 193182114, 193200760, 189975385, 204042833, 202226855, 202797791, 190668688, 189975386, 202226348, 207374427, 195318224]
+        },
+        {
+          "price": "14000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785, 189276732, 189276632, 189276633, 195303247, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114, 191567193, 191567194, 196958056, 196958055, 189277126, 206080611, 189277147, 189277145, 196513966, 189277146, 189277214, 190425491, 196539604, 202798073, 189836534, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 198582780, 196958508, 194635089, 189277173, 204042832, 189277172, 202798264, 189277171, 193182114, 193200760, 189975385, 204042833, 202226855, 202797791, 190668688, 189975386, 202226348, 207374427, 195318224, 189836529, 189907073, 191245237, 191107025, 193036802, 195183998, 207373968, 194635094]
+        },
+        {
+          "price": "16000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785, 189276732, 189276632, 189276633, 195303247, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114, 191567193, 191567194, 196958056, 196958055, 189277126, 206080611, 189277147, 189277145, 196513966, 189277146, 189277214, 190425491, 196539604, 202798073, 189836534, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 198582780, 196958508, 194635089, 189277173, 204042832, 189277172, 202798264, 189277171, 193182114, 193200760, 189975385, 204042833, 202226855, 202797791, 190668688, 189975386, 202226348, 207374427, 195318224, 189836529, 189907073, 191245237, 191107025, 193036802, 195183998, 207373968, 194635094, 191107022, 190966805, 195184008, 197287397, 194635099, 194635098, 189836544, 189836543, 204043243, 207374428, 195184000, 195183997, 193334216, 195183999]
+        }
+      ],
+      "minPriceFilter": [
+        {
+          "price": "4000",
+          "productIds": [196700066, 196700067]
+        },
+        {
+          "price": "6000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785]
+        },
+        {
+          "price": "8000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785, 189276732, 189276632, 189276633, 195303247, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114, 191567193, 191567194, 196958056, 196958055]
+        },
+        {
+          "price": "10000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785, 189276732, 189276632, 189276633, 195303247, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114, 191567193, 191567194, 196958056, 196958055, 189277126, 206080611, 189277147, 189277145, 196513966, 189277146, 189277214, 190425491, 196539604, 202798073, 189836534, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 198582780]
+        },
+        {
+          "price": "12000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785, 189276732, 189276632, 189276633, 195303247, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114, 191567193, 191567194, 196958056, 196958055, 189277126, 206080611, 189277147, 189277145, 196513966, 189277146, 189277214, 190425491, 196539604, 202798073, 189836534, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 198582780, 196958508, 194635089, 189277173, 204042832, 189277172, 202798264, 189277171, 193182114, 193200760, 189975385, 204042833, 202226855, 202797791, 190668688, 189975386, 202226348, 207374427, 195318224]
+        },
+        {
+          "price": "14000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785, 189276732, 189276632, 189276633, 195303247, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114, 191567193, 191567194, 196958056, 196958055, 189277126, 206080611, 189277147, 189277145, 196513966, 189277146, 189277214, 190425491, 196539604, 202798073, 189836534, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 198582780, 196958508, 194635089, 189277173, 204042832, 189277172, 202798264, 189277171, 193182114, 193200760, 189975385, 204042833, 202226855, 202797791, 190668688, 189975386, 202226348, 207374427, 195318224, 189836529, 189907073, 191245237, 191107025, 193036802, 195183998, 207373968, 194635094]
+        },
+        {
+          "price": "16000",
+          "productIds": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785, 189276732, 189276632, 189276633, 195303247, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114, 191567193, 191567194, 196958056, 196958055, 189277126, 206080611, 189277147, 189277145, 196513966, 189277146, 189277214, 190425491, 196539604, 202798073, 189836534, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 198582780, 196958508, 194635089, 189277173, 204042832, 189277172, 202798264, 189277171, 193182114, 193200760, 189975385, 204042833, 202226855, 202797791, 190668688, 189975386, 202226348, 207374427, 195318224, 189836529, 189907073, 191245237, 191107025, 193036802, 195183998, 207373968, 194635094, 191107022, 190966805, 195184008, 197287397, 194635099, 194635098, 189836544, 189836543, 204043243, 207374428, 195184000, 195183997, 193334216, 195183999]
+        }
+      ],
+      "priceFilter": [],
+      "sizeFilter": [
+        {
+          "name": "XXS",
+          "productIds": [191107022, 189277173, 204042832, 189277172, 202798264, 189277171, 189276786, 202798279, 189276784, 189276782, 189276785, 197287397, 194635099, 194635098, 189836529, 189907073, 206080611, 189277147, 189277145, 196513966, 189277146, 204043243, 191245237, 191107025, 193036802, 189277214, 190425491, 195183997, 193200760, 202798073, 189975385, 204042833, 202226855, 189975386, 202226348, 198582781, 189276851, 189276850, 198582780]
+        },
+        {
+          "name": "XS",
+          "productIds": [191107022, 189277173, 204042832, 189277172, 202798264, 189277171, 189276786, 202798279, 189276784, 189276782, 189276785, 195184008, 191567193, 191567194, 197287397, 194635099, 194635098, 189836544, 189836543, 189836529, 189907073, 206080611, 189277147, 196513966, 189277146, 204043243, 191245237, 191107025, 193036802, 189277214, 190425491, 196958055, 195183997, 193200760, 193334216, 195183998, 195183999, 202798073, 189277126, 196958508, 189836534, 189975385, 204042833, 202226855, 194635089, 202797791, 190668688, 204043333, 190668687, 190668686, 205025006, 189975386, 202226348, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 207374427, 195318224, 198582780, 190110934, 204042849]
+        },
+        {
+          "name": "XS",
+          "productIds": [189276732, 189276632, 189276633, 195303247, 205566875, 202226788, 200309589, 200309114]
+        },
+        {
+          "name": "XS-S",
+          "productIds": [190966805, 207374428, 195184000, 207373968, 194635094]
+        },
+        {
+          "name": "S",
+          "productIds": [191107022, 189277173, 204042832, 189277172, 202798264, 189277171, 189276786, 202798279, 189276784, 189276782, 189276785, 195184008, 191567193, 191567194, 197287397, 194635099, 194635098, 189836544, 189836543, 189907073, 206080611, 189277147, 189277145, 196513966, 204043243, 191245237, 191107025, 193036802, 189277214, 190425491, 196958055, 193182114, 195183997, 193200760, 193334216, 195183998, 195183999, 202798073, 196958508, 189836534, 189975385, 204042833, 202226855, 194635089, 202797791, 190668688, 204043333, 190668687, 190668686, 205025006, 196700066, 196700067, 189975386, 202226348, 198582781, 193200759, 205025003, 189907075, 189276850, 189276852, 207374427, 195318224, 198582780, 190110934, 204042849]
+        },
+        {
+          "name": "S",
+          "productIds": [189276732, 189276632, 189276633, 195303247, 205566875, 202226788, 200309589, 200309114]
+        },
+        {
+          "name": "M",
+          "productIds": [189276732, 189276632, 189276633, 195303247, 205566875, 202226788, 200309589, 200309114]
+        },
+        {
+          "name": "M",
+          "productIds": [191107022, 189277173, 204042832, 189277172, 202798264, 189277171, 202798279, 189276784, 189276782, 189276785, 195184008, 191567193, 191567194, 197287397, 194635099, 194635098, 189836544, 189836543, 189836529, 189907073, 206080611, 189277147, 189277145, 196513966, 189277146, 204043243, 191245237, 191107025, 193036802, 189277214, 190425491, 195183997, 193200760, 193334216, 195183998, 195183999, 202798073, 196958508, 189836534, 189975385, 204042833, 202226855, 194635089, 202797791, 190668688, 204043333, 190668687, 190668686, 205025006, 196700066, 196700067, 189975386, 202226348, 198582781, 193200759, 205025003, 189907075, 189276850, 189276852, 207374427, 195318224, 198582780, 190110934, 204042849]
+        },
+        {
+          "name": "M-L",
+          "productIds": [190966805, 207374428, 195184000, 207373968, 194635094]
+        },
+        {
+          "name": "L",
+          "productIds": [189276732, 189276632, 189276633, 195303247, 205566875, 202226788, 200309589, 200309114]
+        },
+        {
+          "name": "L",
+          "productIds": [191107022, 189277173, 204042832, 189277172, 202798264, 189277171, 189276786, 202798279, 189276784, 189276782, 189276785, 195184008, 191567193, 191567194, 197287397, 194635099, 194635098, 189836544, 189836543, 189836529, 189907073, 206080611, 189277147, 189277145, 196513966, 189277146, 204043243, 191245237, 191107025, 193036802, 189277214, 190425491, 193182114, 195183997, 193200760, 193334216, 195183998, 195183999, 202798073, 189277126, 196958508, 189836534, 189975385, 204042833, 202226855, 194635089, 202797791, 190668688, 204043333, 190668687, 190668686, 205025006, 189975386, 202226348, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 207374427, 195318224, 198582780, 190110934, 204042849]
+        },
+        {
+          "name": "XL",
+          "productIds": [189276732, 200309589, 200309114]
+        },
+        {
+          "name": "XL",
+          "productIds": [189276786, 202798279, 189276784, 189276782, 189276785]
+        }
+      ],
+      "sizeTypeFilter": [],
+      "catRelFilter": [],
+      "typeFilter": [
+        {
+          "name": "ProductType: Clothing",
+          "value": "Clothing",
+          "productIds": [196700067, 205566875, 189277173, 190966805, 189836543, 193036802, 195303247, 202226788, 189277147, 195184000, 195183998, 191107025, 189276732, 194635089, 189277172, 204043333, 190668686, 189276782, 189277126, 189276852, 193334216, 207374428, 193200759, 196539604, 189276851, 196958056, 189276632, 190668687, 191567194, 191567193, 189975386, 202798073, 189836529, 204043243, 198582780, 189277146, 197287397, 206080611, 202226855, 191107022, 196513966, 189276785, 204042833, 200309114, 193200760, 189836534, 189276784, 194635094, 189276633, 190110934, 207373968, 202226348, 204042849, 207374427, 196958055, 195318224, 189277145, 196958508, 189276786, 205025006, 202798264, 198582781, 190425491, 195183999, 205025003, 200309589, 189277214, 189836544, 191245237, 194635098, 196700066, 202797791, 195183997, 190668688, 189907075, 195184008, 194635099, 193182114, 202798279, 189907073, 189277171, 204042832, 189975385, 189276850]
+        },
+        {
+          "name": "Product Season V2025",
+          "value": "V2025",
+          "productIds": [196958055, 196958508, 196958056]
+        },
+        {
+          "name": "Product Season I2025",
+          "value": "I2025",
+          "productIds": [196700067, 205566875, 189277173, 190966805, 189836543, 193036802, 195303247, 202226788, 189277147, 195184000, 195183998, 191107025, 189276732, 194635089, 189277172, 204043333, 190668686, 189276782, 189277126, 189276852, 193334216, 207374428, 193200759, 196539604, 189276851, 196958056, 189276632, 190668687, 191567194, 191567193, 189975386, 202798073, 189836529, 204043243, 198582780, 189277146, 197287397, 206080611, 202226855, 191107022, 196513966, 189276785, 204042833, 200309114, 193200760, 189836534, 189276784, 194635094, 189276633, 190110934, 207373968, 202226348, 204042849, 207374427, 196958055, 195318224, 189277145, 196958508, 189276786, 205025006, 202798264, 198582781, 190425491, 195183999, 205025003, 200309589, 189277214, 189836544, 191245237, 194635098, 196700066, 202797791, 195183997, 190668688, 189907075, 195184008, 194635099, 193182114, 202798279, 189907073, 189277171, 204042832, 189975385, 189276850]
+        }
+      ],
+      "calFilter": [],
+      "discountFilter": [
+        {
+          "name": "50",
+          "productIds": [204043333, 190668687, 190668686, 205025006, 196700067, 196700066]
+        },
+        {
+          "name": "30",
+          "productIds": [189277126]
+        }
+      ],
+      "originalPriceDiscountFilter": [
+        {
+          "name": "50",
+          "productIds": [205025006, 190668686, 204043333, 190668687, 196700066, 196700067]
+        },
+        {
+          "name": "30",
+          "productIds": [189277126]
+        }
+      ],
+      "backsoonFilter": [],
+      "promoFilter": [
+        {
+          "name": "BlackFriday_2025_BershkaUS",
+          "productIds": [189276782, 189276785, 189277171, 189836534, 189907075, 190110934, 190966805, 191567193, 191567194, 194635089, 194635098, 194635099, 195184008, 196958508, 202798264, 204042849, 205025003]
+        },
+        {
+          "name": "ECOMLOAD_SEASON_PROMO_ALARGADOS_13_NOV_83065_BershkaUS",
+          "productIds": [196700066, 196700067]
+        },
+        {
+          "name": "ECOMLOAD_SEASON_PROMO_PREFRIDAY_2025_83074_BershkaUS",
+          "productIds": [189277126, 190668686, 190668687, 204043333, 205025006]
+        }
+      ],
+      "noveltyFilter": [189975385, 190668687],
+      "joinLifeFilter": [],
+      "attributeFilter": [
+        {
+          "name": "XTYPEFILTER",
+          "values": [
+            {
+              "name": "ProductType: Clothing",
+              "value": "Clothing",
+              "productIds": [196700067, 205566875, 189277173, 190966805, 189836543, 193036802, 195303247, 202226788, 189277147, 195184000, 195183998, 191107025, 189276732, 194635089, 189277172, 204043333, 190668686, 189276782, 189277126, 189276852, 193334216, 207374428, 193200759, 196539604, 189276851, 196958056, 189276632, 190668687, 191567194, 191567193, 189975386, 202798073, 189836529, 204043243, 198582780, 189277146, 197287397, 206080611, 202226855, 191107022, 196513966, 189276785, 204042833, 200309114, 193200760, 189836534, 189276784, 194635094, 189276633, 190110934, 207373968, 202226348, 204042849, 207374427, 196958055, 195318224, 189277145, 196958508, 189276786, 205025006, 202798264, 198582781, 190425491, 195183999, 205025003, 200309589, 189277214, 189836544, 191245237, 194635098, 196700066, 202797791, 195183997, 190668688, 189907075, 195184008, 194635099, 193182114, 202798279, 189907073, 189277171, 204042832, 189975385, 189276850]
+            },
+            {
+              "name": "Product Season V2025",
+              "value": "V2025",
+              "productIds": [196958055, 196958508, 196958056]
+            },
+            {
+              "name": "Product Season I2025",
+              "value": "I2025",
+              "productIds": [196700067, 205566875, 189277173, 190966805, 189836543, 193036802, 195303247, 202226788, 189277147, 195184000, 195183998, 191107025, 189276732, 194635089, 189277172, 204043333, 190668686, 189276782, 189277126, 189276852, 193334216, 207374428, 193200759, 196539604, 189276851, 196958056, 189276632, 190668687, 191567194, 191567193, 189975386, 202798073, 189836529, 204043243, 198582780, 189277146, 197287397, 206080611, 202226855, 191107022, 196513966, 189276785, 204042833, 200309114, 193200760, 189836534, 189276784, 194635094, 189276633, 190110934, 207373968, 202226348, 204042849, 207374427, 196958055, 195318224, 189277145, 196958508, 189276786, 205025006, 202798264, 198582781, 190425491, 195183999, 205025003, 200309589, 189277214, 189836544, 191245237, 194635098, 196700066, 202797791, 195183997, 190668688, 189907075, 195184008, 194635099, 193182114, 202798279, 189907073, 189277171, 204042832, 189975385, 189276850]
+            }
+          ]
+        }
+      ],
+      "lastSizesFilter": [],
+      "sizeFilterByProductType": [
+        {
+          "name": "XXS",
+          "type": "Clothing",
+          "productIds": [191107022, 189277173, 204042832, 189277172, 202798264, 189277171, 189276786, 202798279, 189276784, 189276782, 189276785, 197287397, 194635099, 194635098, 189836529, 189907073, 206080611, 189277147, 189277145, 196513966, 189277146, 204043243, 191245237, 191107025, 193036802, 189277214, 190425491, 195183997, 193200760, 202798073, 189975385, 204042833, 202226855, 189975386, 202226348, 198582781, 189276851, 189276850, 198582780]
+        },
+        {
+          "name": "XS",
+          "type": "Clothing",
+          "productIds": [191107022, 189277173, 204042832, 189277172, 202798264, 189277171, 189276786, 202798279, 189276784, 189276782, 189276785, 195184008, 191567193, 191567194, 197287397, 194635099, 194635098, 189836544, 189836543, 189836529, 189907073, 206080611, 189277147, 196513966, 189277146, 204043243, 191245237, 191107025, 193036802, 189277214, 190425491, 196958055, 195183997, 193200760, 193334216, 195183998, 195183999, 202798073, 189277126, 196958508, 189836534, 189975385, 204042833, 202226855, 194635089, 202797791, 190668688, 204043333, 190668687, 190668686, 205025006, 189975386, 202226348, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 207374427, 195318224, 198582780, 190110934, 204042849, 189276732, 189276632, 189276633, 195303247, 205566875, 202226788, 200309589, 200309114]
+        },
+        {
+          "name": "XS-S",
+          "type": "Clothing",
+          "productIds": [190966805, 207374428, 195184000, 207373968, 194635094]
+        },
+        {
+          "name": "S",
+          "type": "Clothing",
+          "productIds": [191107022, 189277173, 204042832, 189277172, 202798264, 189277171, 189276786, 202798279, 189276784, 189276782, 189276785, 195184008, 191567193, 191567194, 197287397, 194635099, 194635098, 189836544, 189836543, 189907073, 206080611, 189277147, 189277145, 196513966, 204043243, 191245237, 191107025, 193036802, 189277214, 190425491, 196958055, 193182114, 195183997, 193200760, 193334216, 195183998, 195183999, 202798073, 196958508, 189836534, 189975385, 204042833, 202226855, 194635089, 202797791, 190668688, 204043333, 190668687, 190668686, 205025006, 196700066, 196700067, 189975386, 202226348, 198582781, 193200759, 205025003, 189907075, 189276850, 189276852, 207374427, 195318224, 198582780, 190110934, 204042849, 189276732, 189276632, 189276633, 195303247, 205566875, 202226788, 200309589, 200309114]
+        },
+        {
+          "name": "M",
+          "type": "Clothing",
+          "productIds": [189276732, 189276632, 189276633, 195303247, 205566875, 202226788, 200309589, 200309114, 191107022, 189277173, 204042832, 189277172, 202798264, 189277171, 202798279, 189276784, 189276782, 189276785, 195184008, 191567193, 191567194, 197287397, 194635099, 194635098, 189836544, 189836543, 189836529, 189907073, 206080611, 189277147, 189277145, 196513966, 189277146, 204043243, 191245237, 191107025, 193036802, 189277214, 190425491, 195183997, 193200760, 193334216, 195183998, 195183999, 202798073, 196958508, 189836534, 189975385, 204042833, 202226855, 194635089, 202797791, 190668688, 204043333, 190668687, 190668686, 205025006, 196700066, 196700067, 189975386, 202226348, 198582781, 193200759, 205025003, 189907075, 189276850, 189276852, 207374427, 195318224, 198582780, 190110934, 204042849]
+        },
+        {
+          "name": "M-L",
+          "type": "Clothing",
+          "productIds": [190966805, 207374428, 195184000, 207373968, 194635094]
+        },
+        {
+          "name": "L",
+          "type": "Clothing",
+          "productIds": [189276732, 189276632, 189276633, 195303247, 205566875, 202226788, 200309589, 200309114, 191107022, 189277173, 204042832, 189277172, 202798264, 189277171, 189276786, 202798279, 189276784, 189276782, 189276785, 195184008, 191567193, 191567194, 197287397, 194635099, 194635098, 189836544, 189836543, 189836529, 189907073, 206080611, 189277147, 189277145, 196513966, 189277146, 204043243, 191245237, 191107025, 193036802, 189277214, 190425491, 193182114, 195183997, 193200760, 193334216, 195183998, 195183999, 202798073, 189277126, 196958508, 189836534, 189975385, 204042833, 202226855, 194635089, 202797791, 190668688, 204043333, 190668687, 190668686, 205025006, 189975386, 202226348, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 207374427, 195318224, 198582780, 190110934, 204042849]
+        },
+        {
+          "name": "XL",
+          "type": "Clothing",
+          "productIds": [189276732, 200309589, 200309114, 189276786, 202798279, 189276784, 189276782, 189276785]
+        }
+      ]
+    },
+    "productIds": [191107022, 189277173, 204042832, 189277172, 202798264, 189277171, 189276786, 202798279, 189276784, 189276782, 189276785, 190966805, 195184008, 191567193, 191567194, 197287397, 194635099, 194635098, 189836544, 189836543, 189836529, 189907073, 206080611, 189277147, 189277145, 196513966, 189277146, 204043243, 191245237, 191107025, 193036802, 189277214, 190425491, 196958056, 196958055, 193182114, 207374428, 195184000, 195183997, 193200760, 196539604, 193334216, 195183998, 195183999, 202798073, 189277126, 196958508, 189276732, 189836534, 189975385, 204042833, 202226855, 194635089, 202797791, 190668688, 204043333, 190668687, 207373576, 207373577, 190668686, 205025006, 207373968, 194635094, 196700066, 196700067, 189975386, 202226348, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 189276632, 189276633, 207374427, 195318224, 195303247, 198582780, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114],
+    "sortedProductIds": [189975385, 190668687, 205025006, 205025003, 195303247, 205566875, 196958056, 196958055, 196958508, 189276633, 189277214, 204042832, 189277172, 189276732, 200309589, 200309114, 189277173, 189276786, 202798279, 189276784, 189276782, 189276785, 190966805, 190425491, 196700066, 196700067, 189276851, 189276850, 189276852, 189276632, 202226788, 206080611, 189277147, 189277145, 189277146, 202798073, 190110934, 204042849, 189277126, 204042833, 202226855, 202797791, 190668688, 204043333, 190668686, 189975386, 202226348, 202798264, 189277171, 191567193, 191567194, 193182114, 189907075, 189836529, 194635098, 189907073, 191245237, 191107025, 189836534, 191107022, 204043243, 195183997, 194635089, 195184008, 193200760, 197287397, 198582781, 195183998, 207373968, 194635094, 198582780, 196513966, 193334216, 193200759, 207374427, 195318224, 193036802, 194635099, 189836544, 189836543, 196539604, 195183999, 207374428, 195184000, 207373576, 207373577],
+    "sortedProductIdsByPricesAsc": [196700066, 196700067, 204043333, 190668687, 190668686, 205025006, 189276786, 202798279, 189276784, 189276782, 189276785, 189276732, 189276632, 189276633, 195303247, 190110934, 205566875, 204042849, 202226788, 200309589, 200309114, 191567193, 191567194, 196958056, 196958055, 189277126, 206080611, 189277147, 189277145, 196513966, 189277146, 189277214, 190425491, 196539604, 202798073, 189836534, 198582781, 193200759, 205025003, 189907075, 189276851, 189276850, 189276852, 198582780, 196958508, 194635089, 189277173, 204042832, 189277172, 202798264, 189277171, 193182114, 193200760, 189975385, 204042833, 202226855, 202797791, 190668688, 189975386, 202226348, 207374427, 195318224, 189836529, 189907073, 191245237, 191107025, 193036802, 195183998, 207373968, 194635094, 191107022, 190966805, 195184008, 197287397, 194635099, 194635098, 189836544, 189836543, 204043243, 207374428, 195184000, 195183997, 193334216, 195183999, 207373576, 207373577],
+    "gridContext": {
+      "gridId": "defc20d3-1c43-48d2-8df4-0039c1c9ade0",
+      "defaultImageViewType": "",
+      "promotionalBanners": [],
+      "sectionNames": []
+    }
+  }
