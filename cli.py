@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional, Set
 import re
 import json
+import os
 
 try:
     from .config import load_env, get_supabase_env
@@ -21,97 +22,177 @@ except ImportError:
     from embeddings import get_image_embedding
 
 
-def discover_product_ids_with_playwright(category_id: str, debug: bool = False) -> List[int]:
-    """Use Playwright to get product IDs by loading the actual page."""
+def load_product_ids_from_file(category_id: str, data_dir: str = "category_data") -> List[int]:
+    """
+    Load product IDs from a local JSON file if available.
+    Files should be named: {category_id}.json or category_{category_id}.json
+    The JSON should have a 'productIds' array.
+    """
+    possible_files = [
+        os.path.join(data_dir, f"{category_id}.json"),
+        os.path.join(data_dir, f"category_{category_id}.json"),
+        f"{category_id}.json",
+        f"category_{category_id}.json",
+    ]
+    
+    for filepath in possible_files:
+        if os.path.exists(filepath):
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    product_ids = data.get("productIds", [])
+                    if product_ids:
+                        print(f"  Loaded {len(product_ids)} product IDs from {filepath}")
+                        return product_ids
+            except Exception as e:
+                print(f"  Error loading {filepath}: {e}")
+    
+    return []
+
+
+def discover_product_ids_with_playwright(category_id: str, category_ids_url_template: str, debug: bool = False) -> List[int]:
+    """
+    Use Playwright to get product IDs by:
+    1. First visiting the main site to get cookies
+    2. Then making the API request with those cookies
+    """
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
         if debug:
-            print("  Playwright not available, using fallback")
+            print("  Playwright not available")
         return []
     
     product_ids = []
+    captured_ids = []
+    
+    def handle_response(response):
+        """Capture product IDs from API responses."""
+        nonlocal captured_ids
+        if "category" in response.url and "product" in response.url:
+            try:
+                data = response.json()
+                ids = data.get("productIds", [])
+                if ids:
+                    captured_ids.extend(ids)
+                    print(f"  [Playwright] Captured {len(ids)} product IDs from API")
+            except:
+                pass
     
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             context = browser.new_context(
-                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                locale='en-GB'
             )
             page = context.new_page()
             
-            # Navigate to category page
-            url = f"https://www.bershka.com/us/men/clothes/view-all-c{category_id}.html"
-            if debug:
-                print(f"  Loading page: {url}")
+            # Listen for API responses
+            page.on("response", handle_response)
             
-            page.goto(url, wait_until='networkidle', timeout=60000)
+            # First visit the main site to get cookies
+            print(f"  [Playwright] Visiting main site for cookies...")
+            page.goto("https://www.bershka.com/us/", wait_until='domcontentloaded', timeout=30000)
+            page.wait_for_timeout(2000)
             
-            # Wait for products to load
-            page.wait_for_timeout(3000)
+            # Now try to make the API request directly using the browser context
+            api_url = category_ids_url_template.format(category_id=category_id)
+            print(f"  [Playwright] Fetching API: {api_url[:60]}...")
             
-            # Get all network requests that contain product IDs
-            # The page makes a request to the category/product endpoint
+            try:
+                response = page.goto(api_url, wait_until='domcontentloaded', timeout=30000)
+                if response and response.status == 200:
+                    try:
+                        data = response.json()
+                        product_ids = data.get("productIds", [])
+                        if product_ids:
+                            print(f"  [Playwright] Got {len(product_ids)} product IDs from direct API call")
+                    except:
+                        pass
+            except Exception as e:
+                if debug:
+                    print(f"  [Playwright] Direct API failed: {e}")
             
-            # Try to extract from page content
-            content = page.content()
-            
-            # Look for product IDs in the page (they're in JSON data)
-            matches = re.findall(r'"id"\s*:\s*(\d{9,})', content)
-            product_ids = list(set(int(m) for m in matches))
-            
-            if debug:
-                print(f"  Found {len(product_ids)} product IDs from page content")
+            # If direct API didn't work, try loading the category page
+            if not product_ids and not captured_ids:
+                # Determine correct URL based on category
+                if category_id == "1010834564":
+                    cat_url = f"https://www.bershka.com/us/men/clothes/view-all-c{category_id}.html"
+                else:
+                    cat_url = f"https://www.bershka.com/us/women/clothes/view-all-c{category_id}.html"
+                
+                print(f"  [Playwright] Loading category page: {cat_url[:60]}...")
+                page.goto(cat_url, wait_until='networkidle', timeout=60000)
+                page.wait_for_timeout(5000)
+                
+                # Scroll to trigger lazy loading
+                for _ in range(3):
+                    page.evaluate("window.scrollBy(0, window.innerHeight)")
+                    page.wait_for_timeout(1000)
+                
+                # Check if we captured any IDs from network
+                if captured_ids:
+                    product_ids = list(set(captured_ids))
+                else:
+                    # Try to extract from page content
+                    content = page.content()
+                    matches = re.findall(r'"productIds"\s*:\s*\[([\d,\s]+)\]', content)
+                    if matches:
+                        for match in matches:
+                            ids = [int(x.strip()) for x in match.split(',') if x.strip().isdigit()]
+                            product_ids.extend(ids)
+                        product_ids = list(set(product_ids))
+                        print(f"  [Playwright] Found {len(product_ids)} product IDs from page content")
             
             browser.close()
             
     except Exception as e:
-        if debug:
-            print(f"  Playwright error: {e}")
+        print(f"  [Playwright] Error: {e}")
     
-    return product_ids
+    return product_ids or captured_ids
 
 
-def discover_product_ids_from_api(session: PoliteSession, category_id: str, category_api_url: Optional[str], category_ids_url_template: Optional[str], headers: Dict[str, str], debug: bool = False) -> List[int]:
-    """Try to get product IDs from the category API with proper parameters."""
+def discover_product_ids_from_api(session: PoliteSession, category_id: str, category_ids_url_template: str, headers: Dict[str, str], debug: bool = False) -> List[int]:
+    """
+    Fetch ALL product IDs from the category endpoint.
+    This is the key step - the category/product endpoint returns ALL product IDs for a category.
+    For example, men's category returns 888+ product IDs.
+    """
     
-    # Build list of URLs to try: use category-specific URL first, then template
-    urls_to_try = []
+    # Build the URL using the template
+    url = category_ids_url_template.format(category_id=category_id)
     
-    # 1. Use category-specific API URL if provided
-    if category_api_url:
-        urls_to_try.append(category_api_url)
+    if debug:
+        print(f"  Fetching product IDs from: {url[:80]}...")
     
-    # 2. Try template URL if provided
-    if category_ids_url_template:
-        urls_to_try.append(category_ids_url_template.format(category_id=category_id))
-    
-    # 3. Fallback to hardcoded templates
-    urls_to_try.extend([
-        f"https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/{category_id}/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB",
-        f"https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/{category_id}/product?languageId=-1&appId=1",
-    ])
-    
-    for url in urls_to_try:
-        try:
-            if debug:
-                print(f"  Trying: {url[:80]}...")
-            resp = session.get(url, headers=headers)
-            if resp.status_code == 200:
-                data = resp.json()
-                product_ids = data.get("productIds", [])
-                if product_ids:
-                    print(f"  SUCCESS: Found {len(product_ids)} product IDs from API")
-                    return product_ids
-        except Exception as e:
-            if debug:
-                print(f"  Failed: {str(e)[:50]}")
+    try:
+        resp = session.get(url, headers=headers)
+        if resp.status_code == 200:
+            data = resp.json()
+            product_ids = data.get("productIds", [])
+            if product_ids:
+                print(f"  Found {len(product_ids)} product IDs from category API")
+                return product_ids
+            else:
+                if debug:
+                    print(f"  No productIds in response. Keys: {list(data.keys())}")
+        else:
+            print(f"  API returned status {resp.status_code}")
+            if debug and resp.status_code == 403:
+                print("  API is blocked (403 Forbidden)")
+    except Exception as e:
+        print(f"  Error fetching product IDs: {str(e)[:80]}")
     
     return []
 
 
 def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env: Dict[str, str], limit: int = 0) -> int:
-    """Scrape products for a single site."""
+    """
+    Scrape products for a single site using the two-step approach:
+    1. Fetch ALL product IDs from category/product endpoint
+    2. Fetch product details in batches using productsArray endpoint
+    """
     brand = site.get("brand", "Unknown")
     merchant = site.get("merchant", brand)
     source = site.get("source", "scraper")
@@ -131,10 +212,15 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             except Exception:
                 pass
 
+        # Get URL templates
+        category_ids_url_template = api_conf.get("category_ids_url")
         products_url = api_conf.get("products_url")
         product_url_template = api_conf.get("product_url_template")
         batch_size = api_conf.get("batch_size", 50)
         
+        if not category_ids_url_template:
+            print("Error: Missing category_ids_url in config")
+            return 0
         if not products_url:
             print("Error: Missing products_url in config")
             return 0
@@ -147,111 +233,25 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             category_name = cat_conf.get("name", category_id)
             category_gender = cat_conf.get("gender")
             category_type = cat_conf.get("category")
-            category_api_url = cat_conf.get("category_api_url")  # Per-category API URL
-            fallback_ids_str = cat_conf.get("fallback_ids", "")
             
             if not category_id:
                 continue
             
             print(f"\nProcessing category: {category_name} ({category_id})")
             
-            # Check if category_api_url is a productsArray URL (already contains productIds)
-            use_direct_url = False
-            if category_api_url and "productsArray" in category_api_url and "productIds=" in category_api_url:
-                # This URL already contains productIds and returns products directly
-                use_direct_url = True
-                print(f"  Using direct productsArray URL (contains productIds)")
+            # Step 0: Check for local JSON file first (fastest option)
+            product_ids = load_product_ids_from_file(category_id)
             
-            if use_direct_url:
-                # Use the URL directly to fetch products
-                try:
-                    batch_products = ingest_api(
-                        session,
-                        category_api_url,
-                        api_conf["items_path"],
-                        api_conf["field_map"],
-                        {"headers": headers},
-                        debug=False,
-                    )
-                    
-                    print(f"    Got {len(batch_products)} products from direct API")
-                    
-                    # Extract product IDs from the fetched products for tracking
-                    fetched_ids = [p.get("external_id") or p.get("product_id") or p.get("id") for p in batch_products if p.get("external_id") or p.get("product_id") or p.get("id")]
-                    total_products_found += len(fetched_ids)
-                    seen_product_ids.update(int(pid) for pid in fetched_ids if pid)
-                    
-                    # Process products directly (skip batching since we already have them)
-                    for p in batch_products:
-                        p["merchant"] = merchant
-                        p["source"] = source
-                        p["gender"] = category_gender
-                        
-                        if category_type:
-                            p["category"] = category_type
-                        
-                        if site.get("country"):
-                            p["country"] = site.get("country")
-
-                        if not p.get("external_id"):
-                            p["external_id"] = p.get("product_id") or p.get("id")
-
-                        product_id = p.get("external_id") or p.get("product_id")
-                        title = p.get("title", "product")
-                        slug = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
-                        p["product_url"] = product_url_template.format(
-                            slug=slug,
-                            product_id=product_id
-                        )
-
-                        row = to_supabase_row(p)
-
-                        image_url = row.get("image_url")
-                        if not image_url or not isinstance(image_url, str):
-                            continue
-                        
-                        if any(ext in image_url.lower() for ext in ['.mp4', '.m3u8', '.webm', 'video']):
-                            if debug:
-                                print(f"    [SKIP] Video file: {image_url[:50]}...")
-                            continue
-                        
-                        if 'bershka' in image_url.lower() and 'assets/public' not in image_url:
-                            continue
-
-                        emb = get_image_embedding(image_url)
-                        if emb is not None:
-                            row["embedding"] = emb
-                            collected.append(row)
-                        
-                        if limit and len(collected) >= limit:
-                            print(f"\n  Reached limit of {limit} products")
-                            break
-                    
-                    print(f"  Total collected so far: {len(collected)} products with embeddings")
-                    
-                    # Skip to next category (already processed this one)
-                    # Check limit after processing all categories
-                    continue
-                    
-                except Exception as e:
-                    print(f"  Error fetching from direct URL: {e}")
-                    # Fall through to discovery method
-            
-            # Step 1: Try to discover product IDs from API
-            # Use category-specific URL if provided, otherwise use template
-            category_ids_url_template = api_conf.get("category_ids_url")
-            product_ids = discover_product_ids_from_api(session, category_id, category_api_url, category_ids_url_template, headers, debug)
+            # Step 1: If no local file, try API
+            if not product_ids:
+                product_ids = discover_product_ids_from_api(
+                    session, category_id, category_ids_url_template, headers, debug
+                )
             
             # Step 2: If API failed, try Playwright
             if not product_ids:
-                if debug:
-                    print("  API blocked, trying Playwright...")
-                product_ids = discover_product_ids_with_playwright(category_id, debug)
-            
-            # Step 3: If still no IDs, use fallback
-            if not product_ids and fallback_ids_str:
-                product_ids = [int(pid.strip()) for pid in fallback_ids_str.split(",") if pid.strip()]
-                print(f"  Using {len(product_ids)} fallback product IDs")
+                print("  API blocked, trying Playwright...")
+                product_ids = discover_product_ids_with_playwright(category_id, category_ids_url_template, debug)
             
             if not product_ids:
                 print(f"  No products found, skipping")
@@ -259,7 +259,7 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             
             total_products_found += len(product_ids)
             
-            # Filter duplicates
+            # Filter duplicates (products may appear in multiple categories)
             new_product_ids = [pid for pid in product_ids if pid not in seen_product_ids]
             seen_product_ids.update(product_ids)
             
@@ -269,7 +269,7 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             if not new_product_ids:
                 continue
             
-            # Step 4: Fetch products in batches
+            # Step 3: Fetch products in batches
             for i in range(0, len(new_product_ids), batch_size):
                 batch_ids = new_product_ids[i:i + batch_size]
                 batch_ids_str = ",".join(str(pid) for pid in batch_ids)
@@ -279,7 +279,7 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
                     product_ids=batch_ids_str
                 )
                 
-                print(f"  Batch {i//batch_size + 1}: fetching {len(batch_ids)} products...")
+                print(f"  Batch {i//batch_size + 1}/{(len(new_product_ids) + batch_size - 1)//batch_size}: fetching {len(batch_ids)} products...")
                 
                 try:
                     batch_products = ingest_api(
@@ -321,11 +321,13 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
                         if not image_url or not isinstance(image_url, str):
                             continue
                         
+                        # Skip video files
                         if any(ext in image_url.lower() for ext in ['.mp4', '.m3u8', '.webm', 'video']):
                             if debug:
                                 print(f"    [SKIP] Video file: {image_url[:50]}...")
                             continue
                         
+                        # Skip incomplete Bershka URLs
                         if 'bershka' in image_url.lower() and 'assets/public' not in image_url:
                             continue
 
@@ -348,7 +350,7 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             if limit and len(collected) >= limit:
                 break
             
-            print(f"  Total collected so far: {len(collected)} products with embeddings")
+            print(f"  Category done. Total collected so far: {len(collected)} products with embeddings")
         
         print(f"\n{'='*50}")
         print(f"Total products discovered across all categories: {total_products_found}")
