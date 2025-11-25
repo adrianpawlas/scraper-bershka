@@ -155,6 +155,88 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             
             print(f"\nProcessing category: {category_name} ({category_id})")
             
+            # Check if category_api_url is a productsArray URL (already contains productIds)
+            use_direct_url = False
+            if category_api_url and "productsArray" in category_api_url and "productIds=" in category_api_url:
+                # This URL already contains productIds and returns products directly
+                use_direct_url = True
+                print(f"  Using direct productsArray URL (contains productIds)")
+            
+            if use_direct_url:
+                # Use the URL directly to fetch products
+                try:
+                    batch_products = ingest_api(
+                        session,
+                        category_api_url,
+                        api_conf["items_path"],
+                        api_conf["field_map"],
+                        {"headers": headers},
+                        debug=False,
+                    )
+                    
+                    print(f"    Got {len(batch_products)} products from direct API")
+                    
+                    # Extract product IDs from the fetched products for tracking
+                    fetched_ids = [p.get("external_id") or p.get("product_id") or p.get("id") for p in batch_products if p.get("external_id") or p.get("product_id") or p.get("id")]
+                    total_products_found += len(fetched_ids)
+                    seen_product_ids.update(int(pid) for pid in fetched_ids if pid)
+                    
+                    # Process products directly (skip batching since we already have them)
+                    for p in batch_products:
+                        p["merchant"] = merchant
+                        p["source"] = source
+                        p["gender"] = category_gender
+                        
+                        if category_type:
+                            p["category"] = category_type
+                        
+                        if site.get("country"):
+                            p["country"] = site.get("country")
+
+                        if not p.get("external_id"):
+                            p["external_id"] = p.get("product_id") or p.get("id")
+
+                        product_id = p.get("external_id") or p.get("product_id")
+                        title = p.get("title", "product")
+                        slug = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+                        p["product_url"] = product_url_template.format(
+                            slug=slug,
+                            product_id=product_id
+                        )
+
+                        row = to_supabase_row(p)
+
+                        image_url = row.get("image_url")
+                        if not image_url or not isinstance(image_url, str):
+                            continue
+                        
+                        if any(ext in image_url.lower() for ext in ['.mp4', '.m3u8', '.webm', 'video']):
+                            if debug:
+                                print(f"    [SKIP] Video file: {image_url[:50]}...")
+                            continue
+                        
+                        if 'bershka' in image_url.lower() and 'assets/public' not in image_url:
+                            continue
+
+                        emb = get_image_embedding(image_url)
+                        if emb is not None:
+                            row["embedding"] = emb
+                            collected.append(row)
+                        
+                        if limit and len(collected) >= limit:
+                            print(f"\n  Reached limit of {limit} products")
+                            break
+                    
+                    print(f"  Total collected so far: {len(collected)} products with embeddings")
+                    
+                    # Skip to next category (already processed this one)
+                    # Check limit after processing all categories
+                    continue
+                    
+                except Exception as e:
+                    print(f"  Error fetching from direct URL: {e}")
+                    # Fall through to discovery method
+            
             # Step 1: Try to discover product IDs from API
             # Use category-specific URL if provided, otherwise use template
             category_ids_url_template = api_conf.get("category_ids_url")
