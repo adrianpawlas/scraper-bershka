@@ -1,7 +1,8 @@
 import argparse
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Set
 import re
+import json
 
 try:
     from .config import load_env, get_supabase_env
@@ -20,29 +21,82 @@ except ImportError:
     from embeddings import get_image_embedding
 
 
-def discover_product_ids(session: PoliteSession, category_ids_url: str, category_id: str, headers: Dict[str, str], debug: bool = False) -> Optional[List[int]]:
-    """Discover all product IDs for a category using the category endpoint.
-    Returns None if the endpoint is blocked/fails, so caller can use fallback.
-    """
-    url = category_ids_url.format(category_id=category_id)
+def discover_product_ids_with_playwright(category_id: str, debug: bool = False) -> List[int]:
+    """Use Playwright to get product IDs by loading the actual page."""
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        if debug:
+            print("  Playwright not available, using fallback")
+        return []
     
-    if debug:
-        print(f"  Attempting to discover products from: {url[:80]}...")
+    product_ids = []
     
     try:
-        resp = session.get(url, headers=headers)
-        resp.raise_for_status()
-        data = resp.json()
-        
-        product_ids = data.get("productIds", [])
-        if product_ids:
-            print(f"  SUCCESS: Found {len(product_ids)} product IDs from category API")
-            return product_ids
-        return None
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            context = browser.new_context(
+                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            )
+            page = context.new_page()
+            
+            # Navigate to category page
+            url = f"https://www.bershka.com/us/men/clothes/view-all-c{category_id}.html"
+            if debug:
+                print(f"  Loading page: {url}")
+            
+            page.goto(url, wait_until='networkidle', timeout=60000)
+            
+            # Wait for products to load
+            page.wait_for_timeout(3000)
+            
+            # Get all network requests that contain product IDs
+            # The page makes a request to the category/product endpoint
+            
+            # Try to extract from page content
+            content = page.content()
+            
+            # Look for product IDs in the page (they're in JSON data)
+            matches = re.findall(r'"id"\s*:\s*(\d{9,})', content)
+            product_ids = list(set(int(m) for m in matches))
+            
+            if debug:
+                print(f"  Found {len(product_ids)} product IDs from page content")
+            
+            browser.close()
+            
     except Exception as e:
         if debug:
-            print(f"  Category API blocked/failed: {str(e)[:50]}")
-        return None
+            print(f"  Playwright error: {e}")
+    
+    return product_ids
+
+
+def discover_product_ids_from_api(session: PoliteSession, category_id: str, headers: Dict[str, str], debug: bool = False) -> List[int]:
+    """Try to get product IDs from the category API with proper parameters."""
+    
+    # Try the endpoint that the browser uses
+    urls_to_try = [
+        f"https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/{category_id}/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB",
+        f"https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/{category_id}/product?languageId=-1&appId=1",
+    ]
+    
+    for url in urls_to_try:
+        try:
+            if debug:
+                print(f"  Trying: {url[:80]}...")
+            resp = session.get(url, headers=headers)
+            if resp.status_code == 200:
+                data = resp.json()
+                product_ids = data.get("productIds", [])
+                if product_ids:
+                    print(f"  SUCCESS: Found {len(product_ids)} product IDs from API")
+                    return product_ids
+        except Exception as e:
+            if debug:
+                print(f"  Failed: {str(e)[:50]}")
+    
+    return []
 
 
 def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env: Dict[str, str], limit: int = 0) -> int:
@@ -53,11 +107,10 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
     debug = bool(site.get("debug"))
 
     collected: List[Dict] = []
-    seen_product_ids = set()  # Track seen product IDs to avoid duplicates
+    seen_product_ids: Set[int] = set()
 
     if site.get("api"):
         api_conf = site["api"]
-
         headers = api_conf.get("headers", {})
 
         # Prewarm cookies/session
@@ -67,8 +120,6 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             except Exception:
                 pass
 
-        # Get URL templates
-        category_ids_url = api_conf.get("category_ids_url")
         products_url = api_conf.get("products_url")
         product_url_template = api_conf.get("product_url_template")
         batch_size = api_conf.get("batch_size", 50)
@@ -77,16 +128,14 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             print("Error: Missing products_url in config")
             return 0
 
-        # Process each category
         category_endpoints = api_conf.get("category_endpoints", [])
         total_products_found = 0
-        using_fallback = False
         
         for cat_conf in category_endpoints:
             category_id = cat_conf.get("id")
             category_name = cat_conf.get("name", category_id)
             category_gender = cat_conf.get("gender")
-            category_type = cat_conf.get("category")  # footwear, accessory, or None
+            category_type = cat_conf.get("category")
             fallback_ids_str = cat_conf.get("fallback_ids", "")
             
             if not category_id:
@@ -94,27 +143,27 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             
             print(f"\nProcessing category: {category_name} ({category_id})")
             
-            # Step 1: Try to discover all product IDs from category API
-            product_ids = None
-            if category_ids_url:
-                product_ids = discover_product_ids(session, category_ids_url, category_id, headers, debug)
+            # Step 1: Try to discover product IDs from API
+            product_ids = discover_product_ids_from_api(session, category_id, headers, debug)
             
-            # Step 2: If category API failed, use fallback IDs
+            # Step 2: If API failed, try Playwright
             if not product_ids:
-                if fallback_ids_str:
-                    product_ids = [int(pid.strip()) for pid in fallback_ids_str.split(",") if pid.strip()]
-                    print(f"  Using {len(product_ids)} fallback product IDs")
-                    using_fallback = True
-                else:
-                    print(f"  No products found and no fallback IDs, skipping")
-                    continue
+                if debug:
+                    print("  API blocked, trying Playwright...")
+                product_ids = discover_product_ids_with_playwright(category_id, debug)
+            
+            # Step 3: If still no IDs, use fallback
+            if not product_ids and fallback_ids_str:
+                product_ids = [int(pid.strip()) for pid in fallback_ids_str.split(",") if pid.strip()]
+                print(f"  Using {len(product_ids)} fallback product IDs")
             
             if not product_ids:
+                print(f"  No products found, skipping")
                 continue
             
             total_products_found += len(product_ids)
             
-            # Filter out already seen product IDs
+            # Filter duplicates
             new_product_ids = [pid for pid in product_ids if pid not in seen_product_ids]
             seen_product_ids.update(product_ids)
             
@@ -124,7 +173,7 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             if not new_product_ids:
                 continue
             
-            # Step 3: Fetch products in batches
+            # Step 4: Fetch products in batches
             for i in range(0, len(new_product_ids), batch_size):
                 batch_ids = new_product_ids[i:i + batch_size]
                 batch_ids_str = ",".join(str(pid) for pid in batch_ids)
@@ -143,33 +192,27 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
                         api_conf["items_path"],
                         api_conf["field_map"],
                         {"headers": headers},
-                        debug=False,  # Reduce noise
+                        debug=False,
                     )
                     
                     print(f"    Got {len(batch_products)} products from API")
                     
-                    # Process each product
                     for p in batch_products:
                         p["merchant"] = merchant
                         p["source"] = source
                         p["gender"] = category_gender
                         
-                        # Set category based on config
                         if category_type:
                             p["category"] = category_type
                         
-                        # Add country if specified
                         if site.get("country"):
                             p["country"] = site.get("country")
 
-                        # Ensure external_id exists
                         if not p.get("external_id"):
                             p["external_id"] = p.get("product_id") or p.get("id")
 
-                        # Generate product URL
                         product_id = p.get("external_id") or p.get("product_id")
                         title = p.get("title", "product")
-                        # Create URL-friendly slug
                         slug = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
                         p["product_url"] = product_url_template.format(
                             slug=slug,
@@ -178,35 +221,23 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
 
                         row = to_supabase_row(p)
 
-                        # Skip if no valid image URL
                         image_url = row.get("image_url")
                         if not image_url or not isinstance(image_url, str):
-                            if debug:
-                                print(f"    [SKIP] No image URL for product {product_id}")
                             continue
                         
-                        # Skip video files and invalid URLs
                         if any(ext in image_url.lower() for ext in ['.mp4', '.m3u8', '.webm', 'video']):
                             if debug:
                                 print(f"    [SKIP] Video file: {image_url[:50]}...")
                             continue
                         
-                        # Skip URLs that don't look like valid Bershka images
                         if 'bershka' in image_url.lower() and 'assets/public' not in image_url:
-                            if debug:
-                                print(f"    [SKIP] Invalid Bershka URL: {image_url[:50]}...")
                             continue
 
-                        # Generate image embedding
                         emb = get_image_embedding(image_url)
                         if emb is not None:
                             row["embedding"] = emb
                             collected.append(row)
-                        else:
-                            if debug:
-                                print(f"    [SKIP] Failed to generate embedding for {product_id}")
-
-                        # Check limit
+                        
                         if limit and len(collected) >= limit:
                             print(f"\n  Reached limit of {limit} products")
                             break
@@ -226,16 +257,12 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
         print(f"\n{'='*50}")
         print(f"Total products discovered across all categories: {total_products_found}")
         print(f"Unique products after deduplication: {len(seen_product_ids)}")
-        if using_fallback:
-            print(f"NOTE: Using fallback product IDs (category API was blocked)")
-            print(f"      Full product discovery will work from GitHub Actions")
 
     if collected:
         print(f"\n[{datetime.now().strftime('%H:%M:%S')}] {brand}: processed {len(collected)} products with embeddings")
         if supa_env["url"] and supa_env["key"]:
             print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: upserting to database...")
             
-            # Upsert in batches to avoid issues
             upsert_batch_size = 50
             success_count = 0
             for i in range(0, len(collected), upsert_batch_size):
@@ -246,7 +273,6 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
                     print(f"  Upserted batch {i//upsert_batch_size + 1}: {len(batch)} products (total: {success_count})")
                 except Exception as e:
                     print(f"  Error upserting batch: {e}")
-                    # Try individual inserts for failed batch
                     for row in batch:
                         try:
                             db.upsert_products([row])
@@ -257,7 +283,6 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: database operations completed ({success_count} products)")
         else:
             print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: skipping database upsert (credentials not set)")
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: to enable database operations, set SUPABASE_URL and SUPABASE_KEY environment variables")
 
     return len(collected)
 
@@ -272,7 +297,6 @@ def main() -> None:
     supa_env = get_supabase_env()
     db = SupabaseREST(url=supa_env["url"], key=supa_env["key"])
 
-    # Load site configuration from sites.yaml
     from config import load_sites_config
     sites = load_sites_config("sites.yaml")
 
@@ -280,7 +304,6 @@ def main() -> None:
         print("Error: No sites configured in sites.yaml")
         return
 
-    # Setup session
     session = PoliteSession(default_headers={
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'application/json, text/plain, */*',
