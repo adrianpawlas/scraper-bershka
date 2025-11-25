@@ -72,14 +72,25 @@ def discover_product_ids_with_playwright(category_id: str, debug: bool = False) 
     return product_ids
 
 
-def discover_product_ids_from_api(session: PoliteSession, category_id: str, headers: Dict[str, str], debug: bool = False) -> List[int]:
+def discover_product_ids_from_api(session: PoliteSession, category_id: str, category_api_url: Optional[str], category_ids_url_template: Optional[str], headers: Dict[str, str], debug: bool = False) -> List[int]:
     """Try to get product IDs from the category API with proper parameters."""
     
-    # Try the endpoint that the browser uses
-    urls_to_try = [
+    # Build list of URLs to try: use category-specific URL first, then template
+    urls_to_try = []
+    
+    # 1. Use category-specific API URL if provided
+    if category_api_url:
+        urls_to_try.append(category_api_url)
+    
+    # 2. Try template URL if provided
+    if category_ids_url_template:
+        urls_to_try.append(category_ids_url_template.format(category_id=category_id))
+    
+    # 3. Fallback to hardcoded templates
+    urls_to_try.extend([
         f"https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/{category_id}/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB",
         f"https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/{category_id}/product?languageId=-1&appId=1",
-    ]
+    ])
     
     for url in urls_to_try:
         try:
@@ -136,6 +147,7 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             category_name = cat_conf.get("name", category_id)
             category_gender = cat_conf.get("gender")
             category_type = cat_conf.get("category")
+            category_api_url = cat_conf.get("category_api_url")  # Per-category API URL
             fallback_ids_str = cat_conf.get("fallback_ids", "")
             
             if not category_id:
@@ -144,7 +156,9 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             print(f"\nProcessing category: {category_name} ({category_id})")
             
             # Step 1: Try to discover product IDs from API
-            product_ids = discover_product_ids_from_api(session, category_id, headers, debug)
+            # Use category-specific URL if provided, otherwise use template
+            category_ids_url_template = api_conf.get("category_ids_url")
+            product_ids = discover_product_ids_from_api(session, category_id, category_api_url, category_ids_url_template, headers, debug)
             
             # Step 2: If API failed, try Playwright
             if not product_ids:
