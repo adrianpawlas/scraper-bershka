@@ -46,12 +46,17 @@ logger = logging.getLogger(__name__)
 class BershkaScraper:
     """Main scraper class for Bershka products."""
 
-    def __init__(self):
+    def __init__(self, product_limit: int = None):
         self.supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
         self.session: Optional[aiohttp.ClientSession] = None
         self.processor = None
         self.model = None
         self.executor = ThreadPoolExecutor(max_workers=MAX_WORKERS)
+
+        # Override PRODUCT_LIMIT if specified
+        if product_limit is not None:
+            global PRODUCT_LIMIT
+            PRODUCT_LIMIT = product_limit
 
         # Initialize the embedding model
         self._init_embedding_model()

@@ -4,7 +4,7 @@
 # Comment out categories you don't want to process
 
 # Men's All
-1010834564=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010834564/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010834564
 
 # Women's categories
 1010193212

@@ -6,7 +6,7 @@ import json
 import os
 
 try:
-    from .config import load_env, get_supabase_env
+    from .config import load_env, get_supabase_env, CATEGORY_URLS
     from .http_client import PoliteSession
     from .db import SupabaseREST
     from .api_ingestor import ingest_api
@@ -14,7 +14,7 @@ try:
     from .embeddings import get_image_embedding
 except ImportError:
     # Fallback for direct execution
-    from config import load_env, get_supabase_env
+    from config import load_env, get_supabase_env, CATEGORY_URLS
     from http_client import PoliteSession
     from db import SupabaseREST
     from api_ingestor import ingest_api
@@ -383,6 +383,7 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
             print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: skipping database upsert (credentials not set)")
 
     return len(collected)
+
 
 
 def main() -> None:

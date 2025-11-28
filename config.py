@@ -208,26 +208,27 @@ CATEGORY_CLASSIFICATION = {
 }
 
 # Category URL mapping - maps category IDs to their JSON URLs
+# REPLACE THESE PLACEHOLDER URLs WITH YOUR ACTUAL JSON URLs
 CATEGORY_URLS = {
     # Men's categories
-    '1010834564': 'https://www.bershka.com/path/to/mens_all_products.json',
+    '1010834564': 'https://your-domain.com/api/bershka/mens_all_products.json',
 
     # Women's categories
-    '1010193212': 'https://www.bershka.com/path/to/womens_jackets_products.json',
-    '1010240019': 'https://www.bershka.com/path/to/womens_coats_products.json',
-    '1010276029': 'https://www.bershka.com/path/to/womens_jeans_products.json',
-    '1010193216': 'https://www.bershka.com/path/to/womens_pants_products.json',
-    '1010193213': 'https://www.bershka.com/path/to/womens_dresses_products.json',
-    '1010193223': 'https://www.bershka.com/path/to/womens_sweaters_products.json',
-    '1010193222': 'https://www.bershka.com/path/to/womens_hoodies_products.json',
-    '1010193220': 'https://www.bershka.com/path/to/womens_tops_products.json',
-    '1010193217': 'https://www.bershka.com/path/to/womens_tshirts_products.json',
-    '1010193221': 'https://www.bershka.com/path/to/womens_blouses_products.json',
-    '1010280023': 'https://www.bershka.com/path/to/womens_skirts_products.json',
-    '1010194517': 'https://www.bershka.com/path/to/womens_shorts_products.json',
-    '1010429555': 'https://www.bershka.com/path/to/womens_sets_products.json',
-    '1010361506': 'https://www.bershka.com/path/to/womens_swimwear_products.json',
-    '1010193192': 'https://www.bershka.com/path/to/womens_shoes_products.json',
-    '1010193138': 'https://www.bershka.com/path/to/womens_bags_products.json',
-    '1010193134': 'https://www.bershka.com/path/to/womens_accessories_products.json'
+    '1010193212': 'https://your-domain.com/api/bershka/womens_jackets_products.json',
+    '1010240019': 'https://your-domain.com/api/bershka/womens_coats_products.json',
+    '1010276029': 'https://your-domain.com/api/bershka/womens_jeans_products.json',
+    '1010193216': 'https://your-domain.com/api/bershka/womens_pants_products.json',
+    '1010193213': 'https://your-domain.com/api/bershka/womens_dresses_products.json',
+    '1010193223': 'https://your-domain.com/api/bershka/womens_sweaters_products.json',
+    '1010193222': 'https://your-domain.com/api/bershka/womens_hoodies_products.json',
+    '1010193220': 'https://your-domain.com/api/bershka/womens_tops_products.json',
+    '1010193217': 'https://your-domain.com/api/bershka/womens_tshirts_products.json',
+    '1010193221': 'https://your-domain.com/api/bershka/womens_blouses_products.json',
+    '1010280023': 'https://your-domain.com/api/bershka/womens_skirts_products.json',
+    '1010194517': 'https://your-domain.com/api/bershka/womens_shorts_products.json',
+    '1010429555': 'https://your-domain.com/api/bershka/womens_sets_products.json',
+    '1010361506': 'https://your-domain.com/api/bershka/womens_swimwear_products.json',
+    '1010193192': 'https://your-domain.com/api/bershka/womens_shoes_products.json',
+    '1010193138': 'https://your-domain.com/api/bershka/womens_bags_products.json',
+    '1010193134': 'https://your-domain.com/api/bershka/womens_accessories_products.json'
 }
