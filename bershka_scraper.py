@@ -8,9 +8,10 @@ import asyncio
 import io
 import json
 import logging
+import os
 import time
 from concurrent.futures import ThreadPoolExecutor
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Tuple
 from urllib.parse import urljoin
 
 import aiohttp
@@ -27,7 +28,7 @@ from config import (
     SUPABASE_URL, SUPABASE_KEY, BERSHKA_BASE_URL, BERSHKA_APP_ID,
     BERSHKA_LANGUAGE_ID, BERSHKA_LOCALE, BATCH_SIZE, MAX_WORKERS,
     EMBEDDING_MODEL, CATEGORY_IDS, GENDER_MAPPING, CATEGORY_CLASSIFICATION,
-    PRODUCT_LIMIT
+    PRODUCT_LIMIT, CATEGORY_URLS
 )
 
 # Setup logging
@@ -54,6 +55,65 @@ class BershkaScraper:
 
         # Initialize the embedding model
         self._init_embedding_model()
+
+    def load_categories_from_file(self, filepath: str = "bershka_categories.txt") -> Dict[str, str]:
+        """Load category IDs from a text file and look up their URLs from config.
+
+        File format:
+        category_id (one per line)
+        Lines starting with # are comments and ignored.
+
+        Returns:
+            Dict mapping category_id to URL (looked up from CATEGORY_URLS in config)
+        """
+        categories = {}
+
+        if not os.path.exists(filepath):
+            logger.warning(f"Category file {filepath} not found, using empty categories")
+            return categories
+
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                for line_num, line in enumerate(f, 1):
+                    line = line.strip()
+                    # Skip empty lines and comments
+                    if not line or line.startswith('#'):
+                        continue
+
+                    category_id = line.strip()
+                    if not category_id:
+                        continue
+
+                    # Look up the URL for this category ID from config
+                    if category_id in CATEGORY_URLS:
+                        url = CATEGORY_URLS[category_id]
+                        categories[category_id] = url
+                        logger.debug(f"Loaded category {category_id}: {url}")
+                    else:
+                        logger.warning(f"Category ID {category_id} not found in CATEGORY_URLS config")
+
+            logger.info(f"Loaded {len(categories)} categories from {filepath}")
+            return categories
+
+        except Exception as e:
+            logger.error(f"Error loading categories from {filepath}: {e}")
+            return {}
+
+    async def fetch_products_from_url(self, category_url: str) -> List[Dict[str, Any]]:
+        """Fetch full product data directly from a category URL."""
+        try:
+            async with self.session.get(category_url) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    products = data.get('products', [])
+                    logger.info(f"Fetched {len(products)} products from category URL")
+                    return products
+                else:
+                    logger.warning(f"Failed to fetch products from {category_url}: {response.status}")
+                    return []
+        except Exception as e:
+            logger.error(f"Error fetching products from {category_url}: {e}")
+            return []
 
     def _init_embedding_model(self):
         """Initialize the SigLIP model for image embeddings."""
@@ -242,7 +302,7 @@ class BershkaScraper:
             return None
 
     def _get_best_image_url(self, variant: Dict) -> Optional[str]:
-        """Get the best quality image URL from variant data."""
+        """Get the best quality image URL from variant data, only using images with originalName 's1'."""
         try:
             variant_detail = variant.get('detail', {})
             if not variant_detail:
@@ -252,19 +312,21 @@ class BershkaScraper:
             if not xmedia:
                 return None
 
-            # Look for any product image with media
+            # Look for product images with originalName 's1'
             for xmedia_item in xmedia:
                 for item in xmedia_item.get('xmediaItems', []):
-                    medias = item.get('medias', [])
-                    if medias:
-                        # Get the first media URL (usually highest quality)
-                        media = medias[0]
-                        url = media.get('url', '')
-                        if url.startswith('//'):
-                            url = 'https:' + url
-                        elif url.startswith('/'):
-                            url = 'https://static.bershka.net' + url
-                        return url
+                    # Check if this item has originalName 's1'
+                    if item.get('originalName') == 's1':
+                        medias = item.get('medias', [])
+                        if medias:
+                            # Get the first media URL (usually highest quality)
+                            media = medias[0]
+                            url = media.get('url', '')
+                            if url.startswith('//'):
+                                url = 'https:' + url
+                            elif url.startswith('/'):
+                                url = 'https://static.bershka.net' + url
+                            return url
 
             return None
 
@@ -373,65 +435,25 @@ class BershkaScraper:
             logger.error(f"Error processing image embedding: {e}")
             return None
 
-    async def scrape_category(self, category_name: str, category_id: int, product_ids: List[int] = None) -> List[Dict[str, Any]]:
-        """Scrape all products from a specific category using the provided product IDs."""
-        logger.info(f"Starting to scrape category: {category_name} (ID: {category_id}) with {len(product_ids or [])} product IDs")
+    async def scrape_category(self, category_name: str, category_id: str, category_url: str = None) -> List[Dict[str, Any]]:
+        """Scrape all products from a specific category using the category URL."""
+        logger.info(f"Starting to scrape category: {category_name} (ID: {category_id})")
+
+        if not category_url:
+            logger.warning(f"No category URL provided for {category_name}")
+            return []
+
+        # Fetch products directly from the category URL
+        products_data = await self.fetch_products_from_url(category_url)
 
         all_products = []
+        for product in products_data:
+            product_data = self.extract_product_info(product)
+            all_products.extend(product_data)
 
-        try:
-            # Try to get ALL products from the category with pagination support
-            logger.info(f"Fetching ALL products from category {category_name} with pagination...")
-
-            # Try multiple pages to get all products
-            max_pages = 50  # Try up to 50 pages to get all products
-            products_found = False
-
-            for page in range(max_pages):
-                data = await self.fetch_products_batch(category_id, page=page)
-
-                if data.get('products') and len(data['products']) > 0:
-                    products_found = True
-                    logger.info(f"Page {page}: got {len(data['products'])} products from category {category_name}")
-
-                    for product in data['products']:
-                        product_data = self.extract_product_info(product)
-                        all_products.extend(product_data)
-
-                        # Respect product limit during extraction
-                        if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
-                            break
-
-                    # If we got products but very few, it might be the last page
-                    if len(data['products']) < 10:  # Assume less than 10 means last page
-                        logger.info(f"Reached end of pagination at page {page}")
-                        break
-                else:
-                    # No more products on this page
-                    logger.info(f"No more products found at page {page}, stopping pagination")
-                    break
-
-                # Check if we've hit the product limit
-                if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
-                    logger.info(f"Reached product limit of {PRODUCT_LIMIT}, stopping pagination")
-                    break
-
-            if not products_found:
-                # Fallback: if no products returned through pagination, try with the provided product IDs
-                logger.warning(f"No products found through pagination for category {category_name}, trying with provided product IDs")
-                if product_ids:
-                    data = await self.fetch_products_batch(category_id, product_ids)
-                    if data.get('products'):
-                        for product in data['products']:
-                            product_data = self.extract_product_info(product)
-                            all_products.extend(product_data)
-
-                            # Respect product limit during extraction
-                            if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
-                                break
-
-        except Exception as e:
-            logger.error(f"Error scraping category {category_name}: {e}")
+            # Respect product limit during extraction
+            if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
+                break
 
         logger.info(f"Found {len(all_products)} products in category {category_name}")
         return all_products
@@ -486,15 +508,23 @@ class BershkaScraper:
         start_time = time.time()
         total_products = 0
 
+        # Load categories from text file
+        categories = self.load_categories_from_file()
+
+        if not categories:
+            logger.error("No categories loaded from file, aborting scrape")
+            return {'error': 'No categories loaded'}
+
         # Scrape all categories
         all_products = []
         seen_product_urls = set()  # Track unique product URLs to avoid duplicates
 
-        # Scrape men's categories - get ALL products from each category
-        for category_name, category_data in CATEGORY_IDS['men'].items():
-            category_id = category_data['category_id']
+        # Scrape all categories from the file
+        for category_id, category_url in categories.items():
+            # Create a friendly name for the category
+            category_name = f"category_{category_id}"
 
-            products = await self.scrape_category(f"men_{category_name}", category_id)
+            products = await self.scrape_category(category_name, category_id, category_url)
 
             # Filter out duplicates
             for product in products:
@@ -508,26 +538,6 @@ class BershkaScraper:
                 all_products = all_products[:PRODUCT_LIMIT]
                 logger.info(f"Reached product limit of {PRODUCT_LIMIT}, stopping scraping")
                 break
-
-        # Scrape women's categories (if we haven't reached the limit)
-        if PRODUCT_LIMIT == 0 or len(all_products) < PRODUCT_LIMIT:
-            for category_name, category_data in CATEGORY_IDS['women'].items():
-                category_id = category_data['category_id']
-
-                products = await self.scrape_category(f"women_{category_name}", category_id)
-
-                # Filter out duplicates
-                for product in products:
-                    product_url = product.get('product_url')
-                    if product_url and product_url not in seen_product_urls:
-                        all_products.append(product)
-                        seen_product_urls.add(product_url)
-
-                # Check product limit for testing
-                if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
-                    all_products = all_products[:PRODUCT_LIMIT]
-                    logger.info(f"Reached product limit of {PRODUCT_LIMIT}, stopping scraping")
-                    break
 
         logger.info(f"Total products collected: {len(all_products)}")
 

@@ -1,69 +1,62 @@
-# How to Capture Category Data
+# How to Maintain Category Configuration
 
-Since Bershka's API blocks direct requests, you need to capture the category JSON files from your browser.
+The scraper uses two files:
+- `bershka_categories.txt` - lists category IDs to process
+- `config.py` - contains the mapping from category IDs to JSON URLs
 
-## Step 1: Open Browser DevTools
+## Step 1: The Category IDs File
 
-1. Open Chrome/Edge
-2. Press F12 to open DevTools
-3. Go to the **Network** tab
-4. Check "Preserve log" checkbox
+`bershka_categories.txt` contains category IDs (one per line):
 
-## Step 2: Capture Each Category
-
-For each category, visit the URL and save the JSON response:
-
-### Men's All (1010834564)
 ```
-https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010834564/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+# Bershka categories to process
+# Comment out categories you don't want to process
+
+# Men's All
+1010834564
+
+# Women's categories
+1010193212
+1010240019
+...
 ```
 
-### Women's Categories
+## Step 2: Configure URLs in config.py
 
-| Category | ID | URL |
-|----------|-----|-----|
-| Jackets & Trench | 1010193212 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193212/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Coats | 1010240019 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010240019/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Jeans | 1010276029 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010276029/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Pants | 1010193216 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193216/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Dresses & Jumpsuit | 1010193213 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193213/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Sweaters & Cardigans | 1010193223 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193223/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Sweatshirts & Hoodies | 1010193222 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193222/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Tops & Bodysuits | 1010193220 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193220/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| T-shirts | 1010193217 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193217/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Shirts & Blouses | 1010193221 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193221/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Skirts | 1010280023 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010280023/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Shorts & Jorts | 1010194517 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010194517/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Matching Sets | 1010429555 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010429555/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Swimwear | 1010361506 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010361506/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Shoes | 1010193192 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193192/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Bags | 1010193138 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193138/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
-| Accessories | 1010193134 | `https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193134/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB` |
+Update `CATEGORY_URLS` in `config.py` with your actual JSON URLs:
 
-## Step 3: Save the JSON Files
+```python
+CATEGORY_URLS = {
+    '1010834564': 'https://www.bershka.com/your/real/mens/json/url.json',
+    '1010193212': 'https://www.bershka.com/your/real/womens/jackets/json/url.json',
+    # ... add all your URLs here
+}
+```
 
-1. Visit each URL in your browser (make sure you're on bershka.com first to have cookies)
-2. Copy the entire JSON response
-3. Save to `category_data/{category_id}.json`
-
-For example:
-- `category_data/1010834564.json` (men's all)
-- `category_data/1010193212.json` (women's jackets)
-- etc.
-
-## Step 4: Run the Scraper
+## Step 3: Run the Scraper
 
 ```bash
-python -m cli
+python bershka_scraper.py
 ```
 
-The scraper will automatically load product IDs from these files and fetch the full product details.
+The scraper will automatically:
+1. Read category IDs from `bershka_categories.txt`
+2. Look up URLs from `CATEGORY_URLS` in config.py
+3. Fetch JSON data directly from each URL
+4. Process all products from the JSON
+5. Generate embeddings and save to database
 
-## Alternative: Use Browser Extension
+## Advantages of This Approach
 
-You can also use a browser extension like "JSON Viewer" to easily copy the JSON response.
+- **Clean separation**: IDs in txt file, URLs in config
+- **Always up-to-date**: URLs stay current without manual updates
+- **Simple**: Just fetch JSON and process - no complex API logic
+- **Easy maintenance**: Add/remove category IDs or update URLs independently
 
-## Note
+## File Format Details
 
-The category JSON files contain `productIds` array with all product IDs for that category. The scraper will then fetch product details in batches of 50 using the `productsArray` endpoint.
+- Lines starting with `#` are comments and ignored
+- Empty lines are ignored
+- One category ID per line
+- Category IDs must exist in `CATEGORY_URLS` mapping in config.py
 

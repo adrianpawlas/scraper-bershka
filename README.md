@@ -26,14 +26,12 @@ SUPABASE_URL=your_supabase_project_url
 SUPABASE_KEY=your_supabase_anon_key
 ```
 
-### 3. Capture Category Data (Required)
-Since Bershka's API blocks direct requests, you need to capture category JSON files from your browser.
-See `CAPTURE_INSTRUCTIONS.md` for detailed steps.
+### 3. Configure Categories
+Update `bershka_categories.txt` with category IDs and `config.py` with JSON URLs:
+- `bershka_categories.txt`: List of category IDs to process
+- `config.py`: `CATEGORY_URLS` mapping from IDs to JSON URLs
 
-Save files to `category_data/` folder:
-- `category_data/1010834564.json` (men's all)
-- `category_data/1010193212.json` (women's jackets)
-- etc.
+See `CAPTURE_INSTRUCTIONS.md` for detailed setup.
 
 ### 4. Run the Scraper
 ```bash
@@ -43,16 +41,15 @@ python -m cli --limit 10   # Test with 10 products
 
 ## How It Works
 
-### Two-Step Approach
-1. **Step 1**: Load ALL product IDs from category endpoint (e.g., 888 for men's category)
-   - Source: Local JSON files in `category_data/` or API
-   
-2. **Step 2**: Fetch product details in batches of 50
-   - Uses `productsArray` endpoint with product IDs
+### Direct JSON Approach
+1. **Load category IDs** from `bershka_categories.txt`
+2. **Look up JSON URLs** from `CATEGORY_URLS` in config.py
+3. **Fetch complete product data** directly from each URL
+4. **Process and save** to database with embeddings
 
 ### Data Flow
 ```
-category_data/*.json → Product IDs → Batch API calls → Transform → Embeddings → Supabase
+bershka_categories.txt → Category IDs → JSON URLs → Direct fetch → Transform → Embeddings → Supabase
 ```
 
 ## Categories Scraped
@@ -87,10 +84,10 @@ category_data/*.json → Product IDs → Batch API calls → Transform → Embed
 ├── embeddings.py       # Image embedding generation (SigLIP)
 ├── http_client.py      # HTTP client with session management
 ├── db.py               # Supabase database operations
-├── config.py           # Configuration management
+├── config.py           # Configuration management & category URL mappings
 ├── sites.yaml          # Site-specific configurations
-├── category_data/      # Local JSON files with product IDs (not in git)
-└── CAPTURE_INSTRUCTIONS.md  # How to capture category data
+├── bershka_categories.txt  # Category IDs to process
+└── CAPTURE_INSTRUCTIONS.md  # How to configure categories
 ```
 
 ## GitHub Actions
@@ -153,10 +150,10 @@ Each product record includes:
 ## Troubleshooting
 
 ### API Returns 403
-The API blocks direct requests. Capture category JSON files from your browser using the instructions in `CAPTURE_INSTRUCTIONS.md`.
+Make sure your JSON URLs in `config.py` are accessible and not bot-protected. Check `CAPTURE_INSTRUCTIONS.md` for configuration help.
 
-### Missing Products
-Make sure all category JSON files are in `category_data/` folder. Check `CAPTURE_INSTRUCTIONS.md` for the full list of URLs.
+### Missing Categories
+Make sure category IDs in `bershka_categories.txt` have corresponding URLs in `CATEGORY_URLS` in `config.py`.
 
 ### Embedding Errors
 Some products have video URLs instead of images. These are automatically skipped.

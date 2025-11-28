@@ -1,0 +1,26 @@
+# Bershka categories to process
+# This file contains category IDs (one per line)
+# The scraper will look up the corresponding JSON URLs from config.py
+# Comment out categories you don't want to process
+
+# Men's All
+1010834564=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010834564/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+
+# Women's categories
+1010193212
+1010240019
+1010276029
+1010193216
+1010193213
+1010193223
+1010193222
+1010193220
+1010193217
+1010193221
+1010280023
+1010194517
+1010429555
+1010361506
+1010193192
+1010193138
+1010193134

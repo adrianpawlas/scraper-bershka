@@ -6,33 +6,36 @@ __pycache__/
 .Python
 env/
 venv/
-.venv/
-*.egg-info/
-dist/
-build/
-
-# Environment
-.env
-.env.local
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
+ENV/
+env.bak/
+venv.bak/
 
 # Logs
 *.log
-logs/
+bershka_scraper.log
 
-# Category data is now included in repo for GitHub Actions
-# category_data/
+# Environment variables
+.env
+.env.local
+.env.production
 
-# Test files
-v1.txt
-v2.txt
-sample_api_json.txt
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Database
+*.db
+*.sqlite
+
+# Category data (JSON files that were previously used)
+category_data/
