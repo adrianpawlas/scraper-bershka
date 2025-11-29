@@ -435,14 +435,14 @@ class BershkaScraper:
                             elif media.get('url'):
                                 url = media['url']
 
-                        if url:
-                            if url.startswith('//'):
-                                url = 'https:' + url
-                            elif url.startswith('/') and 'bershka' in url:
-                                url = 'https://static.bershka.net' + url
-                            elif url.startswith('assets/'):
-                                url = 'https://static.bershka.net/' + url
-                            return url
+                            if url:
+                                if url.startswith('//'):
+                                    url = 'https:' + url
+                                elif url.startswith('/') and 'bershka' in url:
+                                    url = 'https://static.bershka.net' + url
+                                elif url.startswith('assets/'):
+                                    url = 'https://static.bershka.net/' + url
+                                return url
 
             # Second priority: If no "p1" found, get any product image
             for xmedia_item in xmedia:
@@ -621,20 +621,50 @@ class BershkaScraper:
         all_products = []
 
         try:
-            # Try to get ALL products from the category with pagination support
-            logger.info(f"Fetching ALL products from category {category_name} with pagination...")
+            # Primary approach: Use the provided product IDs in batches (since large requests cause 500 errors)
+            if product_ids:
+                logger.info(f"Fetching products using {len(product_ids)} product IDs for category {category_name} in batches")
 
-            # Try multiple pages to get all products
-            max_pages = 50  # Try up to 50 pages to get all products
-            products_found = False
+                # Process product IDs in batches to avoid 500 errors
+                batch_size = 50  # Process 50 product IDs at a time
+                for i in range(0, len(product_ids), batch_size):
+                    batch_ids = product_ids[i:i + batch_size]
+                    logger.info(f"Processing batch {i//batch_size + 1} with {len(batch_ids)} product IDs")
 
-            for page in range(max_pages):
-                data = await self.fetch_products_batch(category_id, page=page)
+                    data = await self.fetch_products_batch(category_id, batch_ids)
+
+                    if data.get('products') and len(data['products']) > 0:
+                        logger.info(f"Batch returned {len(data['products'])} products")
+                        for product in data['products']:
+                            try:
+                                product_data = self.extract_product_info(product)
+                                all_products.extend(product_data)
+                            except Exception as e:
+                                logger.error(f"Error extracting product info for product {product.get('id', 'unknown')}: {e}")
+                                stats['extraction_errors'] += 1
+                                continue
+
+                            # Respect product limit during extraction
+                            if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
+                                break
+
+                        # Stop if we've reached the product limit
+                        if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
+                            logger.info(f"Reached product limit of {PRODUCT_LIMIT}, stopping batch processing")
+                            break
+                    else:
+                        logger.warning(f"No products returned for batch with {len(batch_ids)} product IDs")
+
+                    # Add small delay between batches to be respectful
+                    await asyncio.sleep(0.5)
+
+            # Fallback: Try pagination approach (though it seems to fail for Bershka)
+            if not all_products:
+                logger.warning(f"No products found with product IDs for category {category_name}, trying pagination fallback...")
+                data = await self.fetch_products_batch(category_id, page=0)
 
                 if data.get('products') and len(data['products']) > 0:
-                    products_found = True
-                    logger.info(f"Page {page}: got {len(data['products'])} products from category {category_name}")
-
+                    logger.info(f"Pagination returned {len(data['products'])} products for category {category_name}")
                     for product in data['products']:
                         try:
                             product_data = self.extract_product_info(product)
@@ -647,34 +677,8 @@ class BershkaScraper:
                         # Respect product limit during extraction
                         if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
                             break
-
-                    # If we got products but very few, it might be the last page
-                    if len(data['products']) < 10:  # Assume less than 10 means last page
-                        logger.info(f"Reached end of pagination at page {page}")
-                        break
                 else:
-                    # No more products on this page
-                    logger.info(f"No more products found at page {page}, stopping pagination")
-                    break
-
-                # Check if we've hit the product limit
-                if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
-                    logger.info(f"Reached product limit of {PRODUCT_LIMIT}, stopping pagination")
-                    break
-
-            if not products_found:
-                # Fallback: if no products returned through pagination, try with the provided product IDs
-                logger.warning(f"No products found through pagination for category {category_name}, trying with provided product IDs")
-                if product_ids:
-                    data = await self.fetch_products_batch(category_id, product_ids)
-                    if data.get('products'):
-                        for product in data['products']:
-                            product_data = self.extract_product_info(product)
-                            all_products.extend(product_data)
-
-                            # Respect product limit during extraction
-                            if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
-                                break
+                    logger.warning(f"No products found through pagination fallback for category {category_name}")
 
         except Exception as e:
             logger.error(f"Error scraping category {category_name}: {e}")
