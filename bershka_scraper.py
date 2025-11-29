@@ -777,25 +777,25 @@ class BershkaScraper:
 
                     products = await self.scrape_category(f"{gender}_{category_name}", category_id, product_ids, stats)
 
-                # Filter out duplicates
-                category_products_added = 0
-                for product in products:
-                    product_url = product.get('product_url')
-                    if product_url and product_url not in seen_product_urls:
-                        all_products.append(product)
-                        seen_product_urls.add(product_url)
-                        category_products_added += 1
+                    # Filter out duplicates
+                    category_products_added = 0
+                    for product in products:
+                        product_url = product.get('product_url')
+                        if product_url and product_url not in seen_product_urls:
+                            all_products.append(product)
+                            seen_product_urls.add(product_url)
+                            category_products_added += 1
 
-                stats['products_found'] += category_products_added
-                logger.info(f"Added {category_products_added} unique products from category {category_name}")
+                    stats['products_found'] += category_products_added
+                    logger.info(f"Added {category_products_added} unique products from category {category_name}")
 
-                # Check product limit for testing
-                if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
-                    all_products = all_products[:PRODUCT_LIMIT]
-                    logger.info(f"Reached product limit of {PRODUCT_LIMIT}, stopping scraping")
-                    break
+                    # Check product limit for testing
+                    if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
+                        all_products = all_products[:PRODUCT_LIMIT]
+                        logger.info(f"Reached product limit of {PRODUCT_LIMIT}, stopping scraping")
+                        break
 
-            except Exception as e:
+                except Exception as e:
                 logger.error(f"Error processing category {category_name} ({category_id}): {e}")
                 stats['categories_failed'] += 1
                 continue
