@@ -25,8 +25,8 @@ import psycopg2
 from psycopg2.extras import execute_values
 
 from config import (
-    SUPABASE_URL, SUPABASE_KEY, BERSHKA_BASE_URL, BERSHKA_APP_ID,
-    BERSHKA_LANGUAGE_ID, BERSHKA_LOCALE, BATCH_SIZE, MAX_WORKERS,
+    SUPABASE_URL, SUPABASE_KEY, PULL_BEAR_BASE_URL, PULL_BEAR_APP_ID,
+    PULL_BEAR_LANGUAGE_ID, PULL_BEAR_LOCALE, BATCH_SIZE, MAX_WORKERS,
     EMBEDDING_MODEL, CATEGORY_IDS, GENDER_MAPPING, CATEGORY_CLASSIFICATION,
     PRODUCT_LIMIT
 )
@@ -149,15 +149,15 @@ async def load_product_ids_from_url_async(category_id: str, urls: Dict[str, str]
 
             try:
                 # Visit main site first to set cookies and establish session
-                await page.goto('https://www.bershka.com/', wait_until='domcontentloaded', timeout=30000)
+                await page.goto('https://www.pullandbear.com/', wait_until='domcontentloaded', timeout=30000)
                 await asyncio.sleep(2)
 
                 # Navigate to men's section to establish browsing pattern
-                await page.goto('https://www.bershka.com/us/men.html', wait_until='domcontentloaded', timeout=30000)
+                await page.goto('https://www.pullandbear.com/en/man-c1030148976.html', wait_until='domcontentloaded', timeout=30000)
                 await asyncio.sleep(1)
 
                 # Make the API request through Playwright with realistic headers
-                headers = get_realistic_headers('https://www.bershka.com/us/men.html')
+                headers = get_realistic_headers('https://www.pullandbear.com/en/man-c1030148976.html')
                 response = await page.request.get(url, headers=headers, timeout=30000)
 
                 if response.status == 200:
@@ -219,7 +219,7 @@ class BershkaScraper:
     async def __aenter__(self):
         """Async context manager entry."""
         self.session = aiohttp.ClientSession(
-            headers=get_realistic_headers('https://www.bershka.com/'),
+            headers=get_realistic_headers('https://www.pullandbear.com/'),
             connector=aiohttp.TCPConnector(limit=10, ttl_dns_cache=300),
             timeout=aiohttp.ClientTimeout(total=30, connect=10)
         )
@@ -234,11 +234,11 @@ class BershkaScraper:
     def build_api_url(self, category_id: int, product_ids: List[int] = None, page: int = None) -> str:
         """Build the Bershka API URL for a category and optionally product IDs."""
         url = (
-            f"{BERSHKA_BASE_URL}/productsArray?"
+            f"{PULL_BEAR_BASE_URL}/productsArray?"
             f"categoryId={category_id}&"
-            f"appId={BERSHKA_APP_ID}&"
-            f"languageId={BERSHKA_LANGUAGE_ID}&"
-            f"locale={BERSHKA_LOCALE}"
+            f"appId={PULL_BEAR_APP_ID}&"
+            f"languageId={PULL_BEAR_LANGUAGE_ID}&"
+            f"locale={PULL_BEAR_LOCALE}"
         )
 
         if product_ids:
@@ -258,7 +258,7 @@ class BershkaScraper:
         for attempt in range(max_retries):
             try:
                 # Update headers with fresh user agent for each attempt
-                headers = get_realistic_headers('https://www.bershka.com/')
+                headers = get_realistic_headers('https://www.pullandbear.com/')
                 headers.update({'Accept': 'application/json'})
 
                 async with self.session.get(url, headers=headers) as response:
@@ -361,7 +361,7 @@ class BershkaScraper:
             sizes = [size['name'] for size in color.get('sizes', []) if size.get('isBuyable')]
 
             # Build product URL
-            product_url = f"https://www.bershka.com/us/{variant.get('productUrl', '')}.html"
+            product_url = f"https://www.pullandbear.com/en/{variant.get('productUrl', '')}.html"
 
             # Create comprehensive metadata
             metadata = {
@@ -435,14 +435,14 @@ class BershkaScraper:
                             elif media.get('url'):
                                 url = media['url']
 
-                        if url:
-                            if url.startswith('//'):
-                                url = 'https:' + url
-                            elif url.startswith('/') and 'bershka' in url:
-                                url = 'https://static.bershka.net' + url
-                            elif url.startswith('assets/'):
-                                url = 'https://static.bershka.net/' + url
-                            return url
+                            if url:
+                                if url.startswith('//'):
+                                    url = 'https:' + url
+                                elif url.startswith('/') and 'pullandbear' in url:
+                                    url = 'https://static.pullandbear.net' + url
+                                elif url.startswith('assets/'):
+                                    url = 'https://static.pullandbear.net/' + url
+                                return url
 
             # Second priority: If no "p1" found, get any product image
             for xmedia_item in xmedia:
@@ -459,10 +459,10 @@ class BershkaScraper:
                         if url:
                             if url.startswith('//'):
                                 url = 'https:' + url
-                            elif url.startswith('/') and 'bershka' in url:
-                                url = 'https://static.bershka.net' + url
+                            elif url.startswith('/') and 'pullandbear' in url:
+                                url = 'https://static.pullandbear.net' + url
                             elif url.startswith('assets/'):
-                                url = 'https://static.bershka.net/' + url
+                                url = 'https://static.pullandbear.net/' + url
                             return url
 
             return None
@@ -514,7 +514,7 @@ class BershkaScraper:
                 return None
 
             # Download image with timeout and headers
-            headers = get_realistic_headers('https://www.bershka.com/')
+            headers = get_realistic_headers('https://www.pullandbear.com/')
             headers.update({'Accept': 'image/webp,image/apng,image/*,*/*;q=0.8'})
 
             async with self.session.get(image_url, headers=headers, timeout=aiohttp.ClientTimeout(total=15)) as response:
@@ -876,13 +876,13 @@ class BershkaScraper:
         This is similar to the CLI approach but async.
         """
         # Use the same URL format that worked in the CLI
-        url = f"https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/{category_id}/product?languageId=-15&showProducts=false&priceFilter=true&appId=1"
+        url = f"https://www.pullandbear.com/itxrest/3/catalog/store/24009477/20309455/category/{category_id}/product?languageId=-15&showProducts=false&priceFilter=true&appId=1"
 
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'en-GB,en;q=0.9',
-            'Referer': 'https://www.bershka.com/',
+            'Referer': 'https://www.pullandbear.com/',
         }
 
         try:
@@ -918,7 +918,7 @@ class BershkaScraper:
             logger.warning("Playwright not available")
             return []
 
-        url = f"https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/{category_id}/product?languageId=-15&showProducts=false&priceFilter=true&appId=1"
+        url = f"https://www.pullandbear.com/itxrest/3/catalog/store/24009477/20309455/category/{category_id}/product?languageId=-15&showProducts=false&priceFilter=true&appId=1"
 
         try:
             import asyncio
@@ -948,15 +948,15 @@ class BershkaScraper:
 
                 try:
                     # Visit main site first to set cookies
-                    await page.goto('https://www.bershka.com/', wait_until='domcontentloaded', timeout=30000)
+                    await page.goto('https://www.pullandbear.com/', wait_until='domcontentloaded', timeout=30000)
                     await asyncio.sleep(2)
 
                     # Navigate to men's section
-                    await page.goto('https://www.bershka.com/us/men.html', wait_until='domcontentloaded', timeout=30000)
+                    await page.goto('https://www.pullandbear.com/en/man-c1030148976.html', wait_until='domcontentloaded', timeout=30000)
                     await asyncio.sleep(1)
 
                     # Make the API request through Playwright with realistic headers
-                    headers = get_realistic_headers('https://www.bershka.com/us/men.html')
+                    headers = get_realistic_headers('https://www.pullandbear.com/en/man-c1030148976.html')
                     response = await page.request.get(url, headers=headers, timeout=30000)
                     if response.status == 200:
                         data = await response.json()

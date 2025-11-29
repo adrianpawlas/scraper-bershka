@@ -1,0 +1,26 @@
+# Paste Bershka category JSON URLs here
+# Format: category_id=url
+# Example:
+# 1030204838=https://www.pullandbear.com/itxrest/3/catalog/store/24009477/20309455/category/1030204838/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+
+# Men's categories - all categories from user's URLs
+1010834564=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010834564/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193212=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193212/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010240019=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010240019/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193216=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193216/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010276029=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010276029/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193213=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193213/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193223=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193223/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193222=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193222/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193220=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193220/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193217=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193217/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193221=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193221/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010280023=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010280023/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010194517=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010194517/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010429555=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010429555/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010361506=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010361506/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010474567=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010474567/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010833579=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010833579/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193192=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193192/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193138=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193138/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193134=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193134/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB

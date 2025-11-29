@@ -26,54 +26,52 @@ SUPABASE_URL=your_supabase_project_url
 SUPABASE_KEY=your_supabase_anon_key
 ```
 
-### 3. Configure Categories
-Update `bershka_categories.txt` with category IDs and `config.py` with JSON URLs:
-- `bershka_categories.txt`: List of category IDs to process
-- `config.py`: `CATEGORY_URLS` mapping from IDs to JSON URLs
+### 3. Configure Category URLs (Required)
+Since Bershka's API blocks direct requests, you need to provide the category API URLs.
 
-See `CAPTURE_INSTRUCTIONS.md` for detailed setup.
+Edit `category_urls.txt` and paste the URLs for each category:
+```
+# Men's categories
+1010834564=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010834564/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+1010193212=https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/category/1010193212/product?showProducts=false&showNoStock=false&appId=1&languageId=-15&locale=en_GB
+...
+```
+
+The scraper will automatically fetch the latest product IDs from these URLs. When Bershka updates their catalog, just update the URLs in this file.
+
+**Alternative**: You can still save local JSON files to `category_data/` folder as fallback, but URLs are preferred for automatic updates.
 
 ### 4. Run the Scraper
 ```bash
-python -m cli              # Full scrape
-python -m cli --limit 10   # Test with 10 products
+python bershka_scraper.py              # Full scrape
+python bershka_scraper.py --limit 10   # Test with 10 products
 ```
 
 ## How It Works
 
-### Direct JSON Approach
-1. **Load category IDs** from `bershka_categories.txt`
-2. **Look up JSON URLs** from `CATEGORY_URLS` in config.py
-3. **Fetch complete product data** directly from each URL
-4. **Process and save** to database with embeddings
+### Two-Step Approach
+1. **Step 1**: Load ALL product IDs from category endpoint (e.g., 888 for men's category)
+   - Source: Local JSON files in `category_data/` or API
+
+2. **Step 2**: Fetch product details in batches of 50
+   - Uses `productsArray` endpoint with product IDs
 
 ### Data Flow
 ```
-bershka_categories.txt → Category IDs → JSON URLs → Direct fetch → Transform → Embeddings → Supabase
+category_data/*.json → Product IDs → Batch API calls → Transform → Embeddings → Supabase
 ```
 
 ## Categories Scraped
 
 | Category | ID | Gender |
 |----------|-----|--------|
-| Men's All | 1010834564 | MAN |
-| Jackets & Trench | 1010193212 | WOMAN |
-| Coats | 1010240019 | WOMAN |
-| Jeans | 1010276029 | WOMAN |
-| Pants | 1010193216 | WOMAN |
-| Dresses & Jumpsuit | 1010193213 | WOMAN |
-| Sweaters & Cardigans | 1010193223 | WOMAN |
-| Sweatshirts & Hoodies | 1010193222 | WOMAN |
-| Tops & Bodysuits | 1010193220 | WOMAN |
-| T-Shirts | 1010193217 | WOMAN |
-| Shirts & Blouses | 1010193221 | WOMAN |
-| Skirts | 1010280023 | WOMAN |
-| Shorts & Jorts | 1010194517 | WOMAN |
-| Matching Sets | 1010429555 | WOMAN |
-| Swimwear | 1010361506 | WOMAN |
-| Shoes | 1010193192 | WOMAN |
-| Bags | 1010193138 | WOMAN |
-| Accessories | 1010193134 | WOMAN |
+| Men's Jackets & Coats | 1030204838 | MAN |
+| Men's Jeans | 1030204731 | MAN |
+| Men's Pants | 1030204721 | MAN |
+| Men's Sweatshirts & Hoodies | 1030204823 | MAN |
+| Men's T-Shirts | 1030204792 | MAN |
+| Men's Sweaters & Cardigans | 1030204757 | MAN |
+| Men's Shirts | 1030204767 | MAN |
 
 ## Project Structure
 
@@ -84,15 +82,15 @@ bershka_categories.txt → Category IDs → JSON URLs → Direct fetch → Trans
 ├── embeddings.py       # Image embedding generation (SigLIP)
 ├── http_client.py      # HTTP client with session management
 ├── db.py               # Supabase database operations
-├── config.py           # Configuration management & category URL mappings
+├── config.py           # Configuration management
 ├── sites.yaml          # Site-specific configurations
-├── bershka_categories.txt  # Category IDs to process
-└── CAPTURE_INSTRUCTIONS.md  # How to configure categories
+├── category_data/      # Local JSON files with product IDs (not in git)
+└── CAPTURE_INSTRUCTIONS.md  # How to capture category data
 ```
 
 ## GitHub Actions
 
-The scraper includes a manual GitHub Actions workflow:
+The scraper includes automated GitHub Actions workflow that runs daily at midnight and can also be triggered manually.
 
 ### Setup Required
 Add these secrets to your repository (Settings → Secrets → Actions):
@@ -100,11 +98,8 @@ Add these secrets to your repository (Settings → Secrets → Actions):
 - `SUPABASE_KEY`: Your Supabase anon key
 
 ### Running
-1. Go to Actions → "Scrape Bershka Products"
-2. Click "Run workflow"
-3. Choose "full" or "test" mode
-
-**Note**: The workflow is manual-only since API URLs change frequently.
+1. **Automatic**: Runs daily at midnight UTC
+2. **Manual**: Go to Actions → "Scrape Bershka Products" → Click "Run workflow" → Choose "full" or "test" mode
 
 ## Database Schema
 
@@ -150,10 +145,10 @@ Each product record includes:
 ## Troubleshooting
 
 ### API Returns 403
-Make sure your JSON URLs in `config.py` are accessible and not bot-protected. Check `CAPTURE_INSTRUCTIONS.md` for configuration help.
+The API blocks direct requests. Capture category JSON files from your browser using the instructions in `CAPTURE_INSTRUCTIONS.md`.
 
-### Missing Categories
-Make sure category IDs in `bershka_categories.txt` have corresponding URLs in `CATEGORY_URLS` in `config.py`.
+### Missing Products
+Make sure all category JSON files are in `category_data/` folder. Check `CAPTURE_INSTRUCTIONS.md` for the full list of URLs.
 
 ### Embedding Errors
 Some products have video URLs instead of images. These are automatically skipped.

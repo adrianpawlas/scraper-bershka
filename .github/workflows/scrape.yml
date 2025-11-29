@@ -1,7 +1,10 @@
-name: Scrape Bershka Products
+name: Scrape Pull & Bear Products
 
 on:
-  # Manual runs only (no scheduled runs)
+  # Daily at midnight UTC
+  schedule:
+    - cron: '0 0 * * *'
+  # Manual runs
   workflow_dispatch:
     inputs:
       scrape_mode:
@@ -42,17 +45,17 @@ jobs:
         playwright install chromium
         playwright install-deps chromium
 
-    - name: Run Bershka scraper
+    - name: Run Pull & Bear scraper
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
         if [ "${{ github.event.inputs.scrape_mode }}" = "test" ]; then
           echo "Running in test mode with 10 products..."
-          python -m cli --limit 10
+          python pull_bear_scraper.py --limit 10
         else
           echo "Running full scrape..."
-          python -m cli
+          python pull_bear_scraper.py
         fi
 
     - name: Upload logs on failure

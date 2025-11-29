@@ -55,7 +55,8 @@ def load_sites_config(config_file: str = "sites.yaml") -> List[Dict[str, Any]]:
             "country": "us",
             "debug": True,
             "respect_robots": False,
-            "api": {                "endpoints": [
+            "api": {
+                "endpoints": [
                     "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010834564&productIds=201096327%2C191849698%2C201304218%2C204544074%2C201927866%2C205222885%2C204203891%2C204203890%2C203971838%2C203677704%2C202812583%2C202680979%2C202411683%2C202238171%2C201967673%2C201129538%2C201096326%2C201096315%2C200711323%2C200672117&appId=1&languageId=-15&locale=en_GB", #all men's products", # all men's part 1
                     "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010834564&productIds=196141805%2C198373420%2C199767252%2C198000428%2C198034876%2C198588036%2C196141823%2C194669586%2C193776708%2C189276765%2C196946198%2C197459672%2C196141810%2C191125002%2C189975384%2C189276671%2C198187171%2C196353581%2C189276800&appId=1&languageId=-15&locale=en_GB", # all men's part 2", # all men's part 2
                     "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010834564&productIds=200826136%2C197475606%2C195682633%2C189276970%2C189276672%2C202747154%2C198034874%2C196946251%2C194788931%2C189276978%2C196665664%2C202411697%2C196353583%2C191983810%2C189277123%2C200524397%2C200396060%2C199767250%2C197659255&appId=1&languageId=-15&locale=en_GB", # all men's part 3", # all men's part 3
@@ -109,6 +110,7 @@ def load_sites_config(config_file: str = "sites.yaml") -> List[Dict[str, Any]]:
                     "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193192&productIds=201855340%2C191239082%2C204042854%2C196958599%2C204067106%2C208227402%2C204067108%2C208227864%2C189486678%2C189836532%2C196958596%2C195184034%2C201854840%2C202797916%2C192519465%2C196958543%2C194976853%2C192519451%2C200309632%2C190782790%2C191261414&appId=1&languageId=-15&locale=en_GB", #women's shoes", #women's shoes
                     "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193138&productIds=204634216%2C197298903%2C196951975%2C196951911%2C189276935%2C200766649%2C203302140%2C200863240%2C196951910%2C189276755%2C197309091%2C196951819%2C196951822%2C196951820%2C196014192%2C205025484%2C201129527%2C201129528%2C189276808%2C196957981%2C196958027&appId=1&languageId=-15&locale=en_GB", #women's bags & coinpurses", #women's bags & coinpurses
                     "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193134&productIds=200396071%2C196958261%2C203793127%2C202459049%2C207374434%2C207373971%2C202459050%2C196958217%2C196957980%2C196957979&appId=1&languageId=-15&locale=en_GB", #women's accessories", #women's accessories
+                    "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010833579&productIds=208227538%2C208227772%2C207374422%2C207373966%2C207374421%2C208227773%2C208228038%2C208228039%2C208227771%2C208227326%2C208227327%2C208227328%2C208227329%2C208227330%2C208227804%2C204937263%2C208227338%2C204937264%2C204937265%2C204634216&appId=1&languageId=-15&locale=en_GB", # women's bsk teen
                 ],
                 "items_path": "products",
                 "field_map": {
@@ -151,84 +153,72 @@ def get_site_configs(all_sites: List[Dict[str, Any]], filter_brands: str) -> Lis
     return [site for site in all_sites if site.get("brand", "").lower() in [b.lower() for b in brand_list]]
 
 
-# Supabase Configuration
+# Bershka Configuration
+BERSHKA_BASE_URL = "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549"
+BERSHKA_APP_ID = 1
+BERSHKA_LANGUAGE_ID = -15
+BERSHKA_LOCALE = "en_GB"
+
+# Legacy Bershka Configuration (for backward compatibility)
+BERSHKA_BASE_URL = "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549"
+BERSHKA_APP_ID = 1
+BERSHKA_LANGUAGE_ID = -15
+BERSHKA_LOCALE = "en_GB"
+
+# Common Configuration
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
 
-# Bershka API Configuration
-BERSHKA_BASE_URL = "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549"
-BERSHKA_APP_ID = "1"
-BERSHKA_LANGUAGE_ID = "-15"
-BERSHKA_LOCALE = "en_GB"
+BATCH_SIZE = 10
+MAX_WORKERS = 4
+EMBEDDING_MODEL = "google/siglip-base-patch16-384"
+PRODUCT_LIMIT = 0  # 0 = no limit
 
-# Processing Configuration
-BATCH_SIZE = 50
-MAX_WORKERS = 10
-EMBEDDING_MODEL = "google/siglip-so400m-patch14-384"
-PRODUCT_LIMIT = 0  # 0 means no limit
-
-# Category Configuration
+# Category mappings for Bershka - all categories from URLs
 CATEGORY_IDS = {
     'men': {
-        'all': {'category_id': '1010834564'}
+        'jackets_coats': {'category_id': '1030204838'},
+        'jeans': {'category_id': '1030204731'},
+        'pants': {'category_id': '1030204721'},
+        'sweatshirts_hoodies': {'category_id': '1030204823'},
+        'tshirts': {'category_id': '1030204792'},
+        'sweaters_cardigans': {'category_id': '1030204757'},
+        'shirts': {'category_id': '1030204767'},
+        'category_1030299061': {'category_id': '1030299061'},
+        'category_1030204788': {'category_id': '1030204788'},
+        'category_1030204713': {'category_id': '1030204713'},
+        'category_29512': {'category_id': '29512'},
+        'category_1030207045': {'category_id': '1030207045'},
+        'category_1030465398': {'category_id': '1030465398'},
+        'category_1030207098': {'category_id': '1030207098'},
+        'category_1030471396': {'category_id': '1030471396'},
+        'category_1030440811': {'category_id': '1030440811'},
+        'category_1030204693': {'category_id': '1030204693'},
+        'category_1030207192': {'category_id': '1030207192'},
+        'category_1030204670': {'category_id': '1030204670'},
+        'category_1030422324': {'category_id': '1030422324'},
+        'category_1030204632': {'category_id': '1030204632'},
+        'category_1030204661': {'category_id': '1030204661'},
+        'category_1030204617': {'category_id': '1030204617'},
+        'category_1030204645': {'category_id': '1030204645'},
+        'category_1030543096': {'category_id': '1030543096'},
+        'category_1030475966': {'category_id': '1030475966'},
+        'category_1030299058': {'category_id': '1030299058'},
+        'category_1030207001': {'category_id': '1030207001'},
+        'category_1030207022': {'category_id': '1030207022'},
+        'category_1030204877': {'category_id': '1030204877'},
     },
     'women': {
-        'jackets_trench': {'category_id': '1010193212'},
-        'coats': {'category_id': '1010240019'},
-        'jeans': {'category_id': '1010276029'},
-        'pants': {'category_id': '1010193216'},
-        'dresses_jumpsuits': {'category_id': '1010193213'},
-        'sweaters_cardigans': {'category_id': '1010193223'},
-        'sweatshirts_hoodies': {'category_id': '1010193222'},
-        'tops_bodysuits': {'category_id': '1010193220'},
-        'tshirts': {'category_id': '1010193217'},
-        'shirts_blouses': {'category_id': '1010193221'},
-        'skirts': {'category_id': '1010280023'},
-        'shorts_jorts': {'category_id': '1010194517'},
-        'matching_sets': {'category_id': '1010429555'},
-        'swimwear': {'category_id': '1010361506'},
-        'shoes': {'category_id': '1010193192'},
-        'bags': {'category_id': '1010193138'},
-        'accessories': {'category_id': '1010193134'}
+        # Add women's categories as needed
     }
 }
 
-# Gender mapping
 GENDER_MAPPING = {
-    'WOMAN': 'women',
     'MAN': 'men',
-    'UNISEX': 'unisex'
+    'WOMAN': 'women',
+    '': 'unisex'
 }
 
-# Category classification (for accessories/footwear vs clothing)
 CATEGORY_CLASSIFICATION = {
-    'shoes': 'footwear',
-    'bags': 'accessories',
-    'accessories': 'accessories'
-}
-
-# Category URL mapping - maps category IDs to their JSON URLs
-# REPLACE THESE PLACEHOLDER URLs WITH YOUR ACTUAL JSON URLs
-CATEGORY_URLS = {
-    # Men's categories
-    '1010834564': 'https://your-domain.com/api/bershka/mens_all_products.json',
-
-    # Women's categories
-    '1010193212': 'https://your-domain.com/api/bershka/womens_jackets_products.json',
-    '1010240019': 'https://your-domain.com/api/bershka/womens_coats_products.json',
-    '1010276029': 'https://your-domain.com/api/bershka/womens_jeans_products.json',
-    '1010193216': 'https://your-domain.com/api/bershka/womens_pants_products.json',
-    '1010193213': 'https://your-domain.com/api/bershka/womens_dresses_products.json',
-    '1010193223': 'https://your-domain.com/api/bershka/womens_sweaters_products.json',
-    '1010193222': 'https://your-domain.com/api/bershka/womens_hoodies_products.json',
-    '1010193220': 'https://your-domain.com/api/bershka/womens_tops_products.json',
-    '1010193217': 'https://your-domain.com/api/bershka/womens_tshirts_products.json',
-    '1010193221': 'https://your-domain.com/api/bershka/womens_blouses_products.json',
-    '1010280023': 'https://your-domain.com/api/bershka/womens_skirts_products.json',
-    '1010194517': 'https://your-domain.com/api/bershka/womens_shorts_products.json',
-    '1010429555': 'https://your-domain.com/api/bershka/womens_sets_products.json',
-    '1010361506': 'https://your-domain.com/api/bershka/womens_swimwear_products.json',
-    '1010193192': 'https://your-domain.com/api/bershka/womens_shoes_products.json',
-    '1010193138': 'https://your-domain.com/api/bershka/womens_bags_products.json',
-    '1010193134': 'https://your-domain.com/api/bershka/womens_accessories_products.json'
+    # Add category classifications as needed
 }
