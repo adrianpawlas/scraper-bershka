@@ -796,9 +796,9 @@ class BershkaScraper:
                         break
 
                 except Exception as e:
-                logger.error(f"Error processing category {category_name} ({category_id}): {e}")
-                stats['categories_failed'] += 1
-                continue
+                    logger.error(f"Error processing category {category_name} ({category_id}): {e}")
+                    stats['categories_failed'] += 1
+                    continue
 
 
         logger.info(f"Total products collected: {len(all_products)}")
