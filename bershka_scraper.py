@@ -745,33 +745,37 @@ class BershkaScraper:
         all_products = []
         seen_product_urls = set()  # Track unique product URLs to avoid duplicates
 
-        # Scrape men's categories - get ALL products from each category
-        for category_name, category_data in CATEGORY_IDS['men'].items():
-            category_id = category_data['category_id']
-            stats['categories_processed'] += 1
+        # Scrape men's and women's categories - get ALL products from each category
+        for gender in ['men', 'women']:
+            if gender not in CATEGORY_IDS:
+                continue
 
-            try:
-                logger.info(f"Processing category: {category_name} ({category_id})")
+            for category_name, category_data in CATEGORY_IDS[gender].items():
+                category_id = category_data['category_id']
+                stats['categories_processed'] += 1
 
-                # Load product IDs for this category - use Playwright as primary method for URLs
-                product_ids = await load_product_ids_from_url_async(category_id, self.category_urls)
+                try:
+                    logger.info(f"Processing category: {category_name} ({category_id})")
 
-                # Fallback: Try direct API if Playwright URL loading failed
-                if not product_ids:
-                    logger.info(f"  URL loading failed for {category_name}, trying direct API...")
-                    product_ids = await self._discover_product_ids_from_api_async(category_id)
+                    # Load product IDs for this category - use Playwright as primary method for URLs
+                    product_ids = await load_product_ids_from_url_async(category_id, self.category_urls)
 
-                # Final fallback: Try Playwright API discovery
-                if not product_ids:
-                    logger.info(f"  Direct API blocked for {category_name}, trying Playwright API discovery...")
-                    product_ids = await self._discover_product_ids_with_playwright_async(category_id)
+                    # Fallback: Try direct API if Playwright URL loading failed
+                    if not product_ids:
+                        logger.info(f"  URL loading failed for {category_name}, trying direct API...")
+                        product_ids = await self._discover_product_ids_from_api_async(category_id)
 
-                if not product_ids:
-                    logger.warning(f"No product IDs found for category {category_name} ({category_id}) using any method, skipping")
-                    stats['categories_failed'] += 1
-                    continue
+                    # Final fallback: Try Playwright API discovery
+                    if not product_ids:
+                        logger.info(f"  Direct API blocked for {category_name}, trying Playwright API discovery...")
+                        product_ids = await self._discover_product_ids_with_playwright_async(category_id)
 
-                products = await self.scrape_category(f"men_{category_name}", category_id, product_ids, stats)
+                    if not product_ids:
+                        logger.warning(f"No product IDs found for category {category_name} ({category_id}) using any method, skipping")
+                        stats['categories_failed'] += 1
+                        continue
+
+                    products = await self.scrape_category(f"{gender}_{category_name}", category_id, product_ids, stats)
 
                 # Filter out duplicates
                 category_products_added = 0
@@ -796,25 +800,6 @@ class BershkaScraper:
                 stats['categories_failed'] += 1
                 continue
 
-        # Scrape women's categories (if we haven't reached the limit)
-        if PRODUCT_LIMIT == 0 or len(all_products) < PRODUCT_LIMIT:
-            for category_name, category_data in CATEGORY_IDS['women'].items():
-                category_id = category_data['category_id']
-
-                products = await self.scrape_category(f"women_{category_name}", category_id, stats=stats)
-
-                # Filter out duplicates
-                for product in products:
-                    product_url = product.get('product_url')
-                    if product_url and product_url not in seen_product_urls:
-                        all_products.append(product)
-                        seen_product_urls.add(product_url)
-
-                # Check product limit for testing
-                if PRODUCT_LIMIT > 0 and len(all_products) >= PRODUCT_LIMIT:
-                    all_products = all_products[:PRODUCT_LIMIT]
-                    logger.info(f"Reached product limit of {PRODUCT_LIMIT}, stopping scraping")
-                    break
 
         logger.info(f"Total products collected: {len(all_products)}")
 

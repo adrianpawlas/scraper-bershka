@@ -177,39 +177,26 @@ PRODUCT_LIMIT = 0  # 0 = no limit
 # Category mappings for Bershka - all categories from URLs
 CATEGORY_IDS = {
     'men': {
-        'jackets_coats': {'category_id': '1030204838'},
-        'jeans': {'category_id': '1030204731'},
-        'pants': {'category_id': '1030204721'},
-        'sweatshirts_hoodies': {'category_id': '1030204823'},
-        'tshirts': {'category_id': '1030204792'},
-        'sweaters_cardigans': {'category_id': '1030204757'},
-        'shirts': {'category_id': '1030204767'},
-        'category_1030299061': {'category_id': '1030299061'},
-        'category_1030204788': {'category_id': '1030204788'},
-        'category_1030204713': {'category_id': '1030204713'},
-        'category_29512': {'category_id': '29512'},
-        'category_1030207045': {'category_id': '1030207045'},
-        'category_1030465398': {'category_id': '1030465398'},
-        'category_1030207098': {'category_id': '1030207098'},
-        'category_1030471396': {'category_id': '1030471396'},
-        'category_1030440811': {'category_id': '1030440811'},
-        'category_1030204693': {'category_id': '1030204693'},
-        'category_1030207192': {'category_id': '1030207192'},
-        'category_1030204670': {'category_id': '1030204670'},
-        'category_1030422324': {'category_id': '1030422324'},
-        'category_1030204632': {'category_id': '1030204632'},
-        'category_1030204661': {'category_id': '1030204661'},
-        'category_1030204617': {'category_id': '1030204617'},
-        'category_1030204645': {'category_id': '1030204645'},
-        'category_1030543096': {'category_id': '1030543096'},
-        'category_1030475966': {'category_id': '1030475966'},
-        'category_1030299058': {'category_id': '1030299058'},
-        'category_1030207001': {'category_id': '1030207001'},
-        'category_1030207022': {'category_id': '1030207022'},
-        'category_1030204877': {'category_id': '1030204877'},
+        'all_mens': {'category_id': '1010834564'},  # All men's products
     },
     'women': {
-        # Add women's categories as needed
+        'jackets_coats': {'category_id': '1010193212'},  # Women's jackets and trench coats
+        'coats': {'category_id': '1010240019'},  # Women's coats
+        'jeans': {'category_id': '1010276029'},  # Women's jeans
+        'pants': {'category_id': '1010193216'},  # Women's pants
+        'dresses_jumpsuits': {'category_id': '1010193213'},  # Women's dresses & jumpsuits
+        'sweaters_cardigans': {'category_id': '1010193223'},  # Women's sweaters & cardigans
+        'sweatshirts_hoodies': {'category_id': '1010193222'},  # Women's sweatshirts & hoodies
+        'tops_bodysuits': {'category_id': '1010193220'},  # Women's tops & bodysuits
+        'tshirts': {'category_id': '1010193217'},  # Women's t-shirts
+        'shirts_blouses': {'category_id': '1010193221'},  # Women's shirts & blouses
+        'skirts': {'category_id': '1010280023'},  # Women's skirts
+        'shorts_jorts': {'category_id': '1010194517'},  # Women's shorts & jorts
+        'matching_sets': {'category_id': '1010429555'},  # Women's matching sets
+        'shoes': {'category_id': '1010193192'},  # Women's shoes
+        'bags_coinpurses': {'category_id': '1010193138'},  # Women's bags & coinpurses
+        'accessories': {'category_id': '1010193134'},  # Women's accessories
+        'bsk_teen': {'category_id': '1010833579'},  # Women's bsk teen
     }
 }
 
