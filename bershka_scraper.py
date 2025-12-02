@@ -334,6 +334,9 @@ class BershkaScraper:
             reference = color.get('reference', color.get('displayReference', f"no_ref_{color['id']}"))
             product_id = f"{reference}-{color['id']}"
             title = bundle_product.get('nameEn', bundle_product.get('name', ''))
+            # Ensure title is not empty or null
+            if not title or title.strip() == '':
+                title = 'Unknown Product'
             description = variant.get('detail', {}).get('longDescription', '')
 
             # Extract category information
