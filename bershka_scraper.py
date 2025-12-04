@@ -10,6 +10,7 @@ import json
 import logging
 import time
 import random
+import hashlib
 from concurrent.futures import ThreadPoolExecutor
 from typing import List, Dict, Optional, Any
 from urllib.parse import urljoin
@@ -79,6 +80,11 @@ def get_realistic_headers(referer: str = None) -> Dict[str, str]:
         headers['Referer'] = referer
 
     return headers
+
+
+def generate_deterministic_id(source: str, product_url: str) -> str:
+    """Generate a deterministic ID using source and product_url hash."""
+    return hashlib.sha256(f"{source}:{product_url}".encode('utf-8')).hexdigest()
 
 
 def load_category_urls(filename: str = "category_urls.txt") -> Dict[str, str]:
@@ -331,13 +337,17 @@ class BershkaScraper:
                 return None
 
             # Extract basic information
-            reference = color.get('reference', color.get('displayReference', f"no_ref_{color['id']}"))
-            product_id = f"{reference}-{color['id']}"
             title = bundle_product.get('nameEn', bundle_product.get('name', ''))
             # Ensure title is not empty or null
             if not title or title.strip() == '':
                 title = 'Unknown Product'
             description = variant.get('detail', {}).get('longDescription', '')
+
+            # Build product URL first (needed for ID generation)
+            product_url = f"https://www.bershka.com/us/{variant.get('productUrl', '')}.html"
+
+            # Generate deterministic ID using source and product_url
+            product_id = generate_deterministic_id('scraper', product_url)
 
             # Extract category information
             category = self._extract_category(bundle_product)
@@ -362,9 +372,6 @@ class BershkaScraper:
 
             # Extract size information
             sizes = [size['name'] for size in color.get('sizes', []) if size.get('isBuyable')]
-
-            # Build product URL
-            product_url = f"https://www.bershka.com/us/{variant.get('productUrl', '')}.html"
 
             # Create comprehensive metadata
             metadata = {
@@ -711,16 +718,31 @@ class BershkaScraper:
                 if product.get('embedding'):
                     product['embedding'] = f"[{', '.join(map(str, product['embedding']))}]"
 
-            # Insert in batches
+            # Deduplicate by ID to prevent conflicts
+            seen_ids = set()
+            deduplicated_products = []
+            for product in products:
+                product_id = product.get('id')
+                if product_id and product_id not in seen_ids:
+                    seen_ids.add(product_id)
+                    deduplicated_products.append(product)
+                elif not product_id:
+                    logger.warning(f"Product missing ID, skipping: {product.get('title', 'unknown')}")
+                else:
+                    logger.debug(f"Duplicate ID found and skipped: {product_id}")
+
+            logger.info(f"Deduplicated {len(products)} products to {len(deduplicated_products)} unique products")
+
+            # Insert in batches using merge-duplicates approach
             batch_size = 100
             inserted_count = 0
 
-            for i in range(0, len(products), batch_size):
-                batch = products[i:i + batch_size]
+            for i in range(0, len(deduplicated_products), batch_size):
+                batch = deduplicated_products[i:i + batch_size]
 
                 result = self.supabase.table('products').upsert(
                     batch,
-                    on_conflict='source,product_url'
+                    on_conflict='id'  # Use primary key for conflict resolution
                 ).execute()
 
                 inserted_count += len(result.data) if result.data else 0

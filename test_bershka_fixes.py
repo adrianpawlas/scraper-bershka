@@ -134,6 +134,48 @@ async def test_title_extraction_fix():
         return False
 
 
+async def test_deterministic_id_generation():
+    """Test that ID generation is deterministic and unique."""
+    print("Testing deterministic ID generation...")
+
+    try:
+        from bershka_scraper import generate_deterministic_id
+
+        # Test that same source + product_url always generates same ID
+        source = "scraper"
+        product_url1 = "https://www.bershka.com/us/test-product.html"
+        product_url2 = "https://www.bershka.com/us/different-product.html"
+
+        id1a = generate_deterministic_id(source, product_url1)
+        id1b = generate_deterministic_id(source, product_url1)
+        id2 = generate_deterministic_id(source, product_url2)
+
+        if id1a == id1b:
+            print("   ✓ Same source+URL generates consistent ID")
+        else:
+            print(f"   ✗ Inconsistent ID generation: {id1a} != {id1b}")
+            return False
+
+        if id1a != id2:
+            print("   ✓ Different URLs generate different IDs")
+        else:
+            print("   ✗ Different URLs generated same ID (collision)")
+            return False
+
+        # Test ID length (SHA256 hex is 64 characters)
+        if len(id1a) == 64 and id1a.isalnum():
+            print("   ✓ ID has correct format (64-char hex)")
+        else:
+            print(f"   ✗ ID format incorrect: {id1a}")
+            return False
+
+        return True
+
+    except Exception as e:
+        print(f"✗ ID generation test failed: {e}")
+        return False
+
+
 async def main():
     """Run the API functionality tests."""
     print("=" * 60)
@@ -155,7 +197,11 @@ async def main():
     title_test_passed = await test_title_extraction_fix()
     print()
 
-    success = url_test_passed and id_test_passed and title_test_passed
+    # Test 4: Deterministic ID generation
+    id_gen_test_passed = await test_deterministic_id_generation()
+    print()
+
+    success = url_test_passed and id_test_passed and title_test_passed and id_gen_test_passed
 
     print("=" * 60)
     if success:
