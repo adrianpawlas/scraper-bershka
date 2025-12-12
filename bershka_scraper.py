@@ -19,11 +19,15 @@ import aiohttp
 import requests
 import torch
 from PIL import Image
-from supabase import create_client, Client
 from transformers import AutoProcessor, AutoModel
 from tqdm.asyncio import tqdm
 import psycopg2
 from psycopg2.extras import execute_values
+
+try:
+    from .db import SupabaseREST
+except ImportError:
+    from db import SupabaseREST
 
 from config import (
     SUPABASE_URL, SUPABASE_KEY, BERSHKA_BASE_URL, BERSHKA_APP_ID,
@@ -200,7 +204,7 @@ class BershkaScraper:
     """Main scraper class for Bershka products."""
 
     def __init__(self):
-        self.supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        self.db = SupabaseREST(url=SUPABASE_URL, key=SUPABASE_KEY)
         self.session: Optional[aiohttp.ClientSession] = None
         self.processor = None
         self.model = None
@@ -718,37 +722,12 @@ class BershkaScraper:
                 if product.get('embedding'):
                     product['embedding'] = f"[{', '.join(map(str, product['embedding']))}]"
 
-            # Deduplicate by ID to prevent conflicts
-            seen_ids = set()
-            deduplicated_products = []
-            for product in products:
-                product_id = product.get('id')
-                if product_id and product_id not in seen_ids:
-                    seen_ids.add(product_id)
-                    deduplicated_products.append(product)
-                elif not product_id:
-                    logger.warning(f"Product missing ID, skipping: {product.get('title', 'unknown')}")
-                else:
-                    logger.debug(f"Duplicate ID found and skipped: {product_id}")
+            # The SupabaseREST class handles deduplication and upsert logic
+            logger.info(f"Saving {len(products)} products to database")
+            self.db.upsert_products(products)
 
-            logger.info(f"Deduplicated {len(products)} products to {len(deduplicated_products)} unique products")
-
-            # Insert in batches using merge-duplicates approach
-            batch_size = 100
-            inserted_count = 0
-
-            for i in range(0, len(deduplicated_products), batch_size):
-                batch = deduplicated_products[i:i + batch_size]
-
-                result = self.supabase.table('products').upsert(
-                    batch,
-                    on_conflict='id'  # Use primary key for conflict resolution
-                ).execute()
-
-                inserted_count += len(result.data) if result.data else 0
-
-            logger.info(f"Inserted/updated {inserted_count} products in database")
-            return inserted_count
+            logger.info(f"Successfully saved {len(products)} products to database")
+            return len(products)
 
         except Exception as e:
             logger.error(f"Error saving to Supabase: {e}")

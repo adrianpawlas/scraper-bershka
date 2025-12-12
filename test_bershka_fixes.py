@@ -35,11 +35,11 @@ async def test_product_id_loading():
         product_ids = await load_product_ids_from_url_async(test_category_id, mock_urls)
 
         if product_ids:
-            print(f"   ✓ Successfully loaded {len(product_ids)} product IDs")
+            print(f"   [PASS] Successfully loaded {len(product_ids)} product IDs")
             print(f"   Sample IDs: {product_ids[:5]}")
             return len(product_ids) > 0
         else:
-            print("   ✗ Failed to load product IDs from URL")
+            print("   [FAIL] Failed to load product IDs from URL")
             return False
 
     except Exception as e:
@@ -59,24 +59,24 @@ async def test_api_url_building():
         url = scraper.build_api_url(1010193212, None, None)
         expected_base = "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549/productsArray?categoryId=1010193212&appId=1&languageId=-15&locale=en_GB"
         if url == expected_base:
-            print("   ✓ Basic URL building works")
+            print("   [PASS] Basic URL building works")
         else:
-            print(f"   ✗ URL mismatch. Expected: {expected_base}, Got: {url}")
+            print(f"   [FAIL] URL mismatch. Expected: {expected_base}, Got: {url}")
             return False
 
         # Test URL with product IDs
         test_ids = [123, 456, 789]
         url_with_ids = scraper.build_api_url(1010193212, test_ids, None)
         if "&productIds=123%2C456%2C789" in url_with_ids:
-            print("   ✓ URL building with product IDs works")
+            print("   [PASS] URL building with product IDs works")
         else:
-            print(f"   ✗ Product IDs not properly encoded in URL: {url_with_ids}")
+            print(f"   [FAIL] Product IDs not properly encoded in URL: {url_with_ids}")
             return False
 
         return True
 
     except Exception as e:
-        print(f"✗ URL building test failed: {e}")
+        print(f"[FAIL] URL building test failed: {e}")
         return False
 
 
@@ -123,14 +123,14 @@ async def test_title_extraction_fix():
         result = scraper._extract_single_product(bundle_product_no_title, variant, color)
 
         if result and result['title'] == 'Unknown Product':
-            print("   ✓ Products without titles get default title 'Unknown Product'")
+            print("   [PASS] Products without titles get default title 'Unknown Product'")
             return True
         else:
-            print(f"   ✗ Title extraction failed. Got: {result.get('title') if result else 'None'}")
+            print(f"   [FAIL] Title extraction failed. Got: {result.get('title') if result else 'None'}")
             return False
 
     except Exception as e:
-        print(f"✗ Title extraction test failed: {e}")
+        print(f"[FAIL] Title extraction test failed: {e}")
         return False
 
 
@@ -151,22 +151,22 @@ async def test_deterministic_id_generation():
         id2 = generate_deterministic_id(source, product_url2)
 
         if id1a == id1b:
-            print("   ✓ Same source+URL generates consistent ID")
+            print("   [PASS] Same source+URL generates consistent ID")
         else:
-            print(f"   ✗ Inconsistent ID generation: {id1a} != {id1b}")
+            print(f"   [FAIL] Inconsistent ID generation: {id1a} != {id1b}")
             return False
 
         if id1a != id2:
-            print("   ✓ Different URLs generate different IDs")
+            print("   [PASS] Different URLs generate different IDs")
         else:
-            print("   ✗ Different URLs generated same ID (collision)")
+            print("   [FAIL] Different URLs generated same ID (collision)")
             return False
 
         # Test ID length (SHA256 hex is 64 characters)
         if len(id1a) == 64 and id1a.isalnum():
-            print("   ✓ ID has correct format (64-char hex)")
+            print("   [PASS] ID has correct format (64-char hex)")
         else:
-            print(f"   ✗ ID format incorrect: {id1a}")
+            print(f"   [FAIL] ID format incorrect: {id1a}")
             return False
 
         return True
@@ -205,10 +205,10 @@ async def main():
 
     print("=" * 60)
     if success:
-        print("✓ ALL TESTS PASSED - API fixes are working!")
+        print("[PASS] ALL TESTS PASSED - API fixes are working!")
         print("The scraper should now work correctly without null title errors.")
     else:
-        print("✗ SOME TESTS FAILED - Check the fixes")
+        print("[FAIL] SOME TESTS FAILED - Check the fixes")
     print("=" * 60)
 
 
