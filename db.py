@@ -20,15 +20,17 @@ class SupabaseREST:
         })
 
     def upsert_products(self, products: List[Dict]) -> None:
-        """Upsert a list of product dicts into the 'products' table using primary key 'id'."""
+        """Upsert a list of product dicts into the 'products' table using unique constraint on (source, product_url)."""
         if not products:
             return
 
-        # Deduplicate by 'id' within this batch to avoid conflicts
+        # Deduplicate by (source, product_url) within this batch to avoid conflicts
         seen: Dict[str, Dict] = {}
         for p in products:
-            key = p.get('id')
-            if key:
+            source = p.get('source', '')
+            product_url = p.get('product_url', '')
+            key = f"{source}:{product_url}"
+            if key and key != ':':  # Avoid empty keys
                 seen[key] = p
         products = list(seen.values())
 
@@ -42,7 +44,8 @@ class SupabaseREST:
             normalized = {key: p.get(key) for key in all_keys}
             normalized_products.append(normalized)
 
-        endpoint = f"{self.base_url}/rest/v1/products"
+        # Use the unique constraint on (source, product_url) for upsert
+        endpoint = f"{self.base_url}/rest/v1/products?on_conflict=source,product_url&columns=id,source,product_url,affiliate_url,image_url,brand,title,description,category,gender,price,currency,metadata,size,second_hand,embedding,country"
         headers = {
             "Prefer": "resolution=merge-duplicates,return=minimal",
         }
