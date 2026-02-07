@@ -119,3 +119,61 @@ def get_image_embedding(image_url: str, max_retries: int = 3) -> Optional[list]:
 
     print(f"[FAILED] All embedding attempts failed for: {image_url[:60]}")
     return None
+
+
+def get_text_embedding(text: str, max_length: int = 512) -> Optional[list]:
+    """Get text embedding using the same SigLIP model as image embeddings (768-dim).
+    Use for info_embedding: title, description, price, metadata, etc.
+    """
+    if not text or not str(text).strip():
+        return None
+
+    processor, model = _get_model()
+    if model is None or processor is None:
+        return None
+
+    text_str = str(text).strip()
+    if not text_str:
+        return None
+
+    try:
+        # Tokenize with the same processor (SigLIP uses text encoder)
+        inputs = processor(
+            text=[text_str],
+            return_tensors="pt",
+            padding=True,
+            truncation=True,
+            max_length=max_length,
+        )
+        input_ids = inputs.get("input_ids")
+        attention_mask = inputs.get("attention_mask")
+        if input_ids is None:
+            return None
+
+        with torch.no_grad():
+            # SigLIP text encoder - same model as image, same embedding space
+            if hasattr(model, "get_text_features"):
+                text_embeds = model.get_text_features(
+                    input_ids=input_ids,
+                    attention_mask=attention_mask,
+                )
+            else:
+                # Fallback: some checkpoints use forward with text inputs
+                outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+                text_embeds = getattr(outputs, "text_embeds", None) or getattr(
+                    outputs, "last_hidden_state", None
+                )
+                if text_embeds is not None and text_embeds.dim() > 1:
+                    text_embeds = text_embeds[:, 0, :]  # CLS token or pool
+                else:
+                    return None
+
+        embedding = text_embeds.squeeze().tolist()
+        if isinstance(embedding[0], list):
+            embedding = embedding[0]
+        if len(embedding) != 768:
+            return None
+        return embedding
+    except Exception as e:
+        print(f"[ERROR] Text embedding failed: {str(e)[:80]}")
+        return None

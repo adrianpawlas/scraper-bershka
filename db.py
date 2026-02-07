@@ -45,7 +45,7 @@ class SupabaseREST:
             normalized_products.append(normalized)
 
         # Use the unique constraint on (source, product_url) for upsert
-        endpoint = f"{self.base_url}/rest/v1/products?on_conflict=source,product_url&columns=id,source,product_url,affiliate_url,image_url,brand,title,description,category,gender,price,currency,metadata,size,second_hand,embedding,country"
+        endpoint = f"{self.base_url}/rest/v1/products?on_conflict=source,product_url&columns=id,source,product_url,affiliate_url,image_url,brand,title,description,category,gender,price,sale,metadata,size,second_hand,image_embedding,info_embedding,country,additional_images"
         headers = {
             "Prefer": "resolution=merge-duplicates,return=minimal",
         }

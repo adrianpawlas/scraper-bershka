@@ -54,7 +54,6 @@ def to_supabase_row(raw: Dict[str, Any]) -> Dict[str, Any]:
     row: Dict[str, Any] = {}
 
     # Use external_id as the primary key 'id'
-    # Use external_id as the primary key 'id'
     external_id = raw.get("external_id") or raw.get("product_id")
     row["id"] = str(external_id) if external_id else str(raw.get("product_url", "unknown"))
     row["source"] = raw.get("source") or "scraper"
@@ -64,16 +63,49 @@ def to_supabase_row(raw: Dict[str, Any]) -> Dict[str, Any]:
     row["price"] = raw.get("price")
     row["currency"] = raw.get("currency") or "EUR"
     
-    # Fix image URLs for Bershka
+    def _fix_image_url(url: str) -> str:
+        if not url or not isinstance(url, str):
+            return url
+        u = url.strip()
+        if u.startswith('/'):
+            u = f"https://static.bershka.net{u}"
+        elif u.startswith('//'):
+            u = f"https:{u}"
+        return u
+
+    # Collect all image URLs: main image (the one we embed) + additional
+    all_urls_raw = raw.get("all_image_urls")
+    if isinstance(all_urls_raw, list):
+        # Flatten nested lists from JMESPath e.g. xmedia[*].xmediaItems[*]...
+        def _flatten_urls(x: Any, out: List[str]) -> None:
+            if isinstance(x, str) and x.strip() and not x.strip().startswith("data:"):
+                out.append(x.strip())
+            elif isinstance(x, list):
+                for item in x:
+                    _flatten_urls(item, out)
+        all_urls: List[str] = []
+        _flatten_urls(all_urls_raw, all_urls)
+        # Deduplicate preserving order
+        seen_url: set = set()
+        unique_urls = [u for u in all_urls if u and u not in seen_url and not seen_url.add(u)]
+    else:
+        unique_urls = []
+
     image_url = raw.get("image_url")
+    if not image_url and unique_urls:
+        image_url = unique_urls[0]
     if image_url:
-        # Handle relative URLs
-        if image_url.startswith('/'):
-            image_url = f"https://static.bershka.net{image_url}"
-        # Handle protocol-relative URLs
-        elif image_url.startswith('//'):
-            image_url = f"https:{image_url}"
+        image_url = _fix_image_url(str(image_url))
     row["image_url"] = image_url
+
+    # additional_images: all other image URLs, formatted as "url1 , url2 , url3"
+    main_url = row["image_url"]
+    if unique_urls:
+        others = [u for u in unique_urls if u != main_url]
+        others = [_fix_image_url(u) for u in others if u]
+        row["additional_images"] = " , ".join(others) if others else None
+    else:
+        row["additional_images"] = None
     
     # Product URL should be unique - use the one generated in cli.py or construct from ID
     product_url = raw.get("product_url")
@@ -84,6 +116,7 @@ def to_supabase_row(raw: Dict[str, Any]) -> Dict[str, Any]:
         product_url = f"https://www.bershka.com/us/{slug}-c0p{external_id}.html"
     row["product_url"] = product_url
     row["affiliate_url"] = raw.get("affiliate_url")
+    row["sale"] = raw.get("sale")
 
     # Set second_hand to FALSE for all current brands (they are not second-hand marketplaces)
     row["second_hand"] = False
@@ -107,9 +140,13 @@ def to_supabase_row(raw: Dict[str, Any]) -> Dict[str, Any]:
         # No gender provided - leave as None
         row["gender"] = None
 
-    # Category is set by cli.py based on the category config
-    # If not set, default to None (clothing)
-    row["category"] = raw.get("category")
+    # Category: actual product category (e.g. sweaters & hoodies, footwear, t-shirts)
+    # Normalize from config name (e.g. women_sweatshirts_hoodies) to readable form
+    raw_cat = raw.get("category")
+    if isinstance(raw_cat, str) and raw_cat.strip():
+        row["category"] = raw_cat.strip().replace("_", " ").title()
+    else:
+        row["category"] = raw_cat
 
     # Normalize sizes: accept str, list[str], or nested lists → text (comma-separated)
     size_val = raw.get("size") or raw.get("sizes")
@@ -129,35 +166,30 @@ def to_supabase_row(raw: Dict[str, Any]) -> Dict[str, Any]:
     except Exception:
         pass
 
-    # Normalize price from minor units (cents) to decimal if needed
+    # Normalize price (store as text for DB). Convert from minor units if needed.
     try:
         price_val = row.get("price")
         if price_val is not None:
-            # Handle common price formats: integers in minor units, "49.90", "CZK849", "$49.90"
+            num_val = None
             if isinstance(price_val, (int, float)):
-                # If it's a large integer, assume minor units (e.g., 4990 -> 49.90)
                 if isinstance(price_val, int) and price_val >= 1000:
-                    row["price"] = price_val / 100.0
+                    num_val = price_val / 100.0
                 else:
-                    row["price"] = float(price_val)
+                    num_val = float(price_val)
             elif isinstance(price_val, str):
                 s = price_val.strip()
-                # Remove currency symbols and letters
                 s_clean = re.sub(r"[^0-9.,]", "", s)
-                # Replace comma as decimal if needed
                 if s_clean.count(",") == 1 and s_clean.count(".") == 0:
                     s_clean = s_clean.replace(",", ".")
-                # Remove thousand separators
                 if s_clean.count(".") > 1:
                     parts = s_clean.split(".")
                     s_clean = "".join(parts[:-1]) + "." + parts[-1]
                 if s_clean:
-                    num = float(s_clean)
-                    # If looks like minor units (>= 1000 and no decimal), scale down
-                    if num >= 1000 and abs(num - int(num)) < 1e-9:
-                        row["price"] = num / 100.0
-                    else:
-                        row["price"] = num
+                    num_val = float(s_clean)
+                    if num_val >= 1000 and abs(num_val - int(num_val)) < 1e-9:
+                        num_val = num_val / 100.0
+            if num_val is not None:
+                row["price"] = str(num_val) if num_val == int(num_val) else str(num_val)
     except Exception:
         pass
 

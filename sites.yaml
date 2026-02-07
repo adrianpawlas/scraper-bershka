@@ -81,8 +81,10 @@
       description: ["bundleProductSummaries[0].detail.longDescription", "bundleProductSummaries[0].detail.description"]
       price: "bundleProductSummaries[0].detail.colors[0].sizes[0].price"
       currency: "'EUR'"
-      # Use deliveryUrl from xmedia which has the full image URL
+      # Main image (first one) - used for image_url and image_embedding
       image_url: "bundleProductSummaries[0].detail.xmedia[0].xmediaItems[0].medias[0].extraInfo.deliveryUrl"
+      # All image URLs for additional_images (main image + others)
+      all_image_urls: "bundleProductSummaries[0].detail.xmedia[*].xmediaItems[*].medias[*].extraInfo.deliveryUrl"
       brand: "'Bershka'"
       sizes: "bundleProductSummaries[0].detail.colors[0].sizes[].name"
     headers:

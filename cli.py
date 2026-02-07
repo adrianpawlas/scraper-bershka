@@ -11,7 +11,7 @@ try:
     from .db import SupabaseREST
     from .api_ingestor import ingest_api
     from .transform import to_supabase_row
-    from .embeddings import get_image_embedding
+    from .embeddings import get_image_embedding, get_text_embedding
 except ImportError:
     # Fallback for direct execution
     from config import load_env, get_supabase_env
@@ -19,7 +19,7 @@ except ImportError:
     from db import SupabaseREST
     from api_ingestor import ingest_api
     from transform import to_supabase_row
-    from embeddings import get_image_embedding
+    from embeddings import get_image_embedding, get_text_embedding
 
 
 def load_category_urls(filename: str = "category_urls.txt") -> Dict[str, str]:
@@ -348,9 +348,8 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
                         p["merchant"] = merchant
                         p["source"] = source
                         p["gender"] = category_gender
-                        
-                        if category_type:
-                            p["category"] = category_type
+                        # Actual category name (e.g. women_sweatshirts_hoodies) for DB category column
+                        p["category"] = category_name
                         
                         if site.get("country"):
                             p["country"] = site.get("country")
@@ -384,7 +383,30 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
 
                         emb = get_image_embedding(image_url)
                         if emb is not None:
-                            row["embedding"] = emb
+                            row["image_embedding"] = emb
+                            # info_embedding: text embedding of all product info (same model as image)
+                            info_parts = []
+                            if row.get("title"):
+                                info_parts.append(str(row["title"]))
+                            if row.get("description"):
+                                info_parts.append(str(row["description"]))
+                            if row.get("price") is not None:
+                                info_parts.append(f"Price: {row['price']}")
+                            if row.get("sale") is not None:
+                                info_parts.append(f"Sale: {row['sale']}")
+                            if row.get("brand"):
+                                info_parts.append(str(row["brand"]))
+                            if row.get("category"):
+                                info_parts.append(str(row["category"]))
+                            if row.get("metadata") and isinstance(row["metadata"], dict):
+                                for k, v in row["metadata"].items():
+                                    if v is not None and str(v).strip():
+                                        info_parts.append(f"{k}: {v}")
+                            info_text = " ".join(info_parts).strip()
+                            if info_text:
+                                info_emb = get_text_embedding(info_text)
+                                if info_emb is not None:
+                                    row["info_embedding"] = info_emb
                             collected.append(row)
                         
                         if limit and len(collected) >= limit:

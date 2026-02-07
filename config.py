@@ -312,6 +312,7 @@ def load_sites_config(config_file: str = "sites.yaml") -> List[Dict[str, Any]]:
                     "price": "bundleProductSummaries[0].detail.colors[0].sizes[0].price",
                     "currency": "'EUR'",
                     "image_url": "bundleProductSummaries[0].detail.colors[0].image.url",
+                    "all_image_urls": "bundleProductSummaries[0].detail.colors[*].image.url",
                     "product_url": "bundleProductSummaries[0].productUrl",
                     "brand": "'Bershka'",
                     "sizes": "bundleProductSummaries[0].detail.colors[0].sizes[].name"
