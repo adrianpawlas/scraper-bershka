@@ -451,6 +451,20 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
                         except Exception as e2:
                             print(f"    Failed to insert product {row.get('id')}: {str(e2)[:80]}")
             
+            # Smart sync: remove products for this source that are no longer in catalog
+            try:
+                current_ids = [row.get("id") for row in collected if row.get("id")]
+                if current_ids:
+                    db.delete_missing_for_source_merchant_country(
+                        source=source,
+                        merchant_name=merchant,
+                        country=site.get("country", "us") or "us",
+                        current_ids=current_ids,
+                    )
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: removed stale products no longer in catalog")
+            except Exception as e:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: warning - could not remove stale products: {e}")
+            
             print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: database operations completed ({success_count} products)")
         else:
             print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: skipping database upsert (credentials not set)")

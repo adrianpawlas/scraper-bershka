@@ -350,8 +350,8 @@ class BershkaScraper:
             # Build product URL first (needed for ID generation)
             product_url = f"https://www.bershka.com/us/{variant.get('productUrl', '')}.html"
 
-            # Generate deterministic ID using source and product_url
-            product_id = generate_deterministic_id('scraper', product_url)
+            # Generate deterministic ID using source and product_url (use unique source per brand)
+            product_id = generate_deterministic_id('bershka', product_url)
 
             # Extract category information
             category = self._extract_category(bundle_product)
@@ -403,7 +403,7 @@ class BershkaScraper:
 
             return {
                 'id': product_id,
-                'source': 'scraper',
+                'source': 'bershka',
                 'product_url': product_url,
                 'affiliate_url': None,
                 'image_url': image_url,
@@ -715,16 +715,30 @@ class BershkaScraper:
         return processed_products
 
     async def save_to_supabase(self, products: List[Dict[str, Any]]) -> int:
-        """Save products to Supabase database."""
+        """Save products to Supabase database with smart sync (upsert + remove stale)."""
         try:
             # Convert embeddings to proper format for Supabase vector
             for product in products:
                 if product.get('embedding'):
                     product['embedding'] = f"[{', '.join(map(str, product['embedding']))}]"
 
-            # The SupabaseREST class handles deduplication and upsert logic
+            # Upsert: new products insert, existing products stay as-is (no replace)
             logger.info(f"Saving {len(products)} products to database")
             self.db.upsert_products(products)
+
+            # Smart sync: remove products for this source no longer in catalog
+            current_ids = [p.get('id') for p in products if p.get('id')]
+            if current_ids:
+                try:
+                    self.db.delete_missing_for_source_merchant_country(
+                        source='bershka',
+                        merchant_name='Bershka',
+                        country='us',
+                        current_ids=current_ids,
+                    )
+                    logger.info("Removed stale products no longer in catalog")
+                except Exception as del_err:
+                    logger.warning(f"Could not remove stale products: {del_err}")
 
             logger.info(f"Successfully saved {len(products)} products to database")
             return len(products)

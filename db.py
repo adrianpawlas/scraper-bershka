@@ -45,9 +45,10 @@ class SupabaseREST:
             normalized_products.append(normalized)
 
         # Use the unique constraint on (source, product_url) for upsert
+        # resolution=ignore-duplicates: new products insert, existing products stay as-is (no replace)
         endpoint = f"{self.base_url}/rest/v1/products?on_conflict=source,product_url&columns=id,source,product_url,affiliate_url,image_url,brand,title,description,category,gender,price,sale,metadata,size,second_hand,image_embedding,info_embedding,country,additional_images"
         headers = {
-            "Prefer": "resolution=merge-duplicates,return=minimal",
+            "Prefer": "resolution=ignore-duplicates,return=minimal",
         }
 
         # Chunk inserts to keep requests reasonable (metadata can be large)

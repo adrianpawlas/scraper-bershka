@@ -1,6 +1,6 @@
 - brand: Bershka
   merchant: Bershka
-  source: scraper
+  source: bershka
   country: us
   debug: true
   respect_robots: false

@@ -1,18 +1,23 @@
 import os
+from pathlib import Path
 from typing import Dict, List, Any
 try:
     from dotenv import load_dotenv
     import yaml
 except ImportError:
     # Fallback if packages not available
-    def load_dotenv():
+    def load_dotenv(*args, **kwargs):
         pass
     yaml = None
 
 
 def load_env():
-    """Load environment variables from .env file."""
-    load_dotenv()
+    """Load environment variables from .env file.
+    Uses project root (directory of config.py) so automated runs (cron, Task Scheduler)
+    with different working directory still find .env correctly.
+    """
+    project_root = Path(__file__).resolve().parent
+    load_dotenv(project_root / ".env", override=False)
 
 
 def get_supabase_env() -> Dict[str, str]:
@@ -51,7 +56,7 @@ def load_sites_config(config_file: str = "sites.yaml") -> List[Dict[str, Any]]:
         return [{
             "brand": "Bershka",
             "merchant": "Bershka",
-            "source": "scraper",
+            "source": "bershka",
             "country": "us",
             "debug": True,
             "respect_robots": False,
@@ -357,13 +362,15 @@ BERSHKA_LANGUAGE_ID = -15
 BERSHKA_LOCALE = "en_GB"
 
 # Common Configuration
-SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+# Load .env from project root before reading env vars (fixes automated runs with different cwd)
+load_env()
+SUPABASE_URL = os.getenv("SUPABASE_URL", "").rstrip("/")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
 
 BATCH_SIZE = 10
 MAX_WORKERS = 4
 EMBEDDING_MODEL = "google/siglip-base-patch16-384"
-PRODUCT_LIMIT = 0  # 0 = no limit
+PRODUCT_LIMIT = int(os.getenv("PRODUCT_LIMIT", "0"))  # 0 = no limit (set PRODUCT_LIMIT=10 for test runs)
 
 # Category mappings for Bershka - all categories from URLs
 CATEGORY_IDS = {
