@@ -1,4 +1,4 @@
-name: Run Massimo Dutti Scraper
+name: Run Bershka Scraper
 
 on:
   schedule:

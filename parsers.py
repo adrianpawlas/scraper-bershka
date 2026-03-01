@@ -1,4 +1,4 @@
-"""Parse Massimo Dutti API responses."""
+"""Parse Bershka API responses."""
 import json
 import re
 from typing import Any
@@ -8,6 +8,7 @@ from config import (
     COUNTRY_TO_CURRENCY,
     IMAGE_BASE_URL,
     PRODUCT_URL_LOCALE,
+    RECORD_ID_PREFIX,
 )
 
 
@@ -32,7 +33,8 @@ def extract_product_ids_from_grid(data: dict) -> set[int]:
 
     if "gridElements" in data:
         for elem in data["gridElements"]:
-            if elem.get("type") == "block" and "commercialComponentIds" in elem:
+            # block (Massimo Dutti) or CC (Bershka)
+            if "commercialComponentIds" in elem and elem.get("type") in ("block", "CC"):
                 for cc in elem["commercialComponentIds"]:
                     if isinstance(cc, dict) and "ccId" in cc:
                         product_ids.add(cc["ccId"])
@@ -55,14 +57,14 @@ def extract_product_ids_from_grid(data: dict) -> set[int]:
     return product_ids
 
 
-# Only use full CDN URLs (assets/public with -c/-o1/-t suffixes)
+# Only use full CDN URLs (assets/public)
 ASSETS_PUBLIC_PREFIX = f"{IMAGE_BASE_URL}/assets/public/"
 
 
 def get_image_urls_from_product(bundle_summary: dict) -> tuple[str | None, list[str]]:
     """
     Extract main image URL and additional image URLs from product.
-    Only uses full CDN URLs: static.massimodutti.net/assets/public/.../-c/-o1/-t
+    Uses full CDN URLs (e.g. static.bershka.net/assets/public/...).
     Returns (main_image_url, [additional_urls]).
     """
     main_url = None
@@ -277,7 +279,7 @@ def collect_prices_eur(
 def build_product_url(
     product: dict, bundle_summary: dict, product_id: int, gender: str = "man"
 ) -> str:
-    """Build product page URL: be/en/{slug}-l{ref}?pelement={product_id}."""
+    """Build product page URL: {locale}/{slug}-l{ref}?pelement={product_id}."""
     detail = bundle_summary.get("detail", {})
     ref = detail.get("reference") or detail.get("displayReference") or ""
     ref_clean = ref.split("-")[0].replace("/", "").strip() if ref else ""
@@ -351,7 +353,7 @@ def parse_products_api(data: dict) -> list[dict]:
 
         records.append(
             {
-                "id": f"massimodutti_{product_id}",
+                "id": f"{RECORD_ID_PREFIX}_{product_id}",
                 "product_id": product_id,
                 "product_url": product_url,
                 "gender": gender,

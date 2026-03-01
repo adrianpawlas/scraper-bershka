@@ -1,4 +1,4 @@
-"""Main Massimo Dutti scraper - fetches APIs, extracts products, embeds, imports to Supabase."""
+"""Main Bershka scraper - fetches APIs, extracts products, embeds, imports to Supabase."""
 import json
 import logging
 import sys
@@ -193,7 +193,7 @@ def run_scraper(api_urls: Optional[list[str]] = None, skip_embeddings: bool = Fa
 def main():
     """CLI entry point."""
     import argparse
-    parser = argparse.ArgumentParser(description="Massimo Dutti scraper")
+    parser = argparse.ArgumentParser(description="Bershka scraper")
     parser.add_argument("--urls", nargs="*", help="API URLs (overrides api_urls.txt)")
     parser.add_argument("--skip-embeddings", action="store_true", help="Skip embedding generation (faster)")
     args = parser.parse_args()

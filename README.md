@@ -1,6 +1,6 @@
-# Massimo Dutti Scraper
+# Bershka Scraper
 
-Scrapes product data from Massimo Dutti API URLs, generates image and text embeddings (768-dim SigLIP), and imports to Supabase.
+Scrapes product data from Bershka API URLs, generates image and text embeddings (768-dim SigLIP), and imports to Supabase.
 
 ## Setup
 
@@ -11,10 +11,10 @@ Scrapes product data from Massimo Dutti API URLs, generates image and text embed
 
 2. **Configure API URLs**
    - Open `api_urls.txt`
-   - Paste your Massimo Dutti API URLs (one per line) — capture from the website's network tab
-   - You need at least one **products API** URL (JSON with `"products"` array) for full product data
-   - Grid API URLs (JSON with `gridElements` or `productIds`) are optional
-   - For local testing, you can use file paths (e.g. `sample1txt`)
+   - Paste your Bershka API URLs (one per line) — capture from the website's network tab
+   - You need at least one **products API** URL (JSON with `"products"` or `"productsArray"`) for full product data
+   - Grid/category API URLs (JSON with `gridElements` or `productIds`) are optional
+   - For local testing, you can use file paths (e.g. `sample1txt`, `sample2.txt`)
 
 3. **Configure Supabase** (optional)
    - Edit `config.py` or set env vars: `SUPABASE_URL`, `SUPABASE_ANON_KEY`
@@ -42,13 +42,13 @@ GitHub Actions runs the scraper daily at midnight UTC. Setup:
    - `SUPABASE_URL`
    - `SUPABASE_ANON_KEY`
 
-3. **Manual trigger**: Actions → "Run Massimo Dutti Scraper" → Run workflow
+3. **Manual trigger**: Actions → "Run Bershka Scraper" → Run workflow
 
 ## Output
 
 Products are upserted to the `products` table with:
 - `source`: "scraper"
-- `brand`: "Massimo Dutti"
-- `gender`: "man"
+- `brand`: "Bershka"
+- `gender`: auto-detected (man/woman)
 - `image_embedding`: 768-dim from google/siglip-base-patch16-384
 - `info_embedding`: 768-dim from SigLIP text encoder

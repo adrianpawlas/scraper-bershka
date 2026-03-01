@@ -1,4 +1,4 @@
-"""Configuration for Massimo Dutti scraper."""
+"""Configuration for Bershka scraper."""
 import os
 from pathlib import Path
 
@@ -14,15 +14,17 @@ SUPABASE_ANON_KEY = os.getenv(
 
 # Product defaults
 SOURCE = "scraper"
-BRAND = "Massimo Dutti"
+BRAND = "Bershka"
 GENDER = "man"
 SECOND_HAND = False
+# Prefix for product record IDs in DB (e.g. bershka_12345)
+RECORD_ID_PREFIX = "bershka"
 
-# Base URLs for Massimo Dutti
-BASE_PRODUCT_URL = "https://www.massimodutti.com"
-IMAGE_BASE_URL = "https://static.massimodutti.net"
+# Base URLs for Bershka
+BASE_PRODUCT_URL = "https://www.bershka.com"
+IMAGE_BASE_URL = "https://static.bershka.net"
 # Product URL locale (country/language)
-PRODUCT_URL_LOCALE = "be/en"
+PRODUCT_URL_LOCALE = "us/en"
 
 # Currency mapping by country (ISO 4217)
 COUNTRY_TO_CURRENCY = {
