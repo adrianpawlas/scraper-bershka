@@ -12,14 +12,13 @@ from supabase import create_client
 from config import (
     API_URLS_FILE,
     BRAND,
-    GENDER,
     SECOND_HAND,
     SOURCE,
     SUPABASE_ANON_KEY,
     SUPABASE_URL,
 )
 from embeddings import get_image_embedding, get_text_embedding
-from parsers import detect_api_type, parse_products_api, extract_product_ids_from_grid
+from parsers import detect_api_type, extract_category_id_from_url, parse_products_api, extract_product_ids_from_grid
 
 logging.basicConfig(
     level=logging.INFO,
@@ -88,6 +87,10 @@ def build_info_text(record: dict) -> str:
 
 def record_to_db_row(record: dict, image_embedding: list[float] | None, info_embedding: list[float] | None) -> dict:
     """Convert parsed record to Supabase products table row."""
+    from parsers import ensure_price_with_currency
+
+    price = record.get("price")
+    sale = record.get("sale")
     row = {
         "id": record["id"],
         "source": SOURCE,
@@ -97,24 +100,25 @@ def record_to_db_row(record: dict, image_embedding: list[float] | None, info_emb
         "title": record["title"],
         "description": record.get("description"),
         "category": record.get("category"),
-        "gender": record.get("gender") or GENDER,
+        "gender": record.get("gender"),  # man, woman, or None (NULL/unisex)
         "metadata": record.get("metadata"),
         "size": None,
         "second_hand": SECOND_HAND,
         "country": None,
         "tags": None,
         "other": None,
-        "price": record.get("price"),
-        "sale": record.get("sale"),
+        "price": ensure_price_with_currency(price) if price else None,
+        "sale": ensure_price_with_currency(sale) if sale else None,
         "additional_images": record.get("additional_images"),
         "affiliate_url": None,
         "compressed_image_url": None,
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
 
-    if image_embedding:
+    # Always include embeddings when we have valid vectors (required for search)
+    if image_embedding and len(image_embedding) > 0:
         row["image_embedding"] = image_embedding
-    if info_embedding:
+    if info_embedding and len(info_embedding) > 0:
         row["info_embedding"] = info_embedding
 
     return row
@@ -145,7 +149,8 @@ def run_scraper(api_urls: Optional[list[str]] = None, skip_embeddings: bool = Fa
             continue
 
         if api_type == "products":
-            records = parse_products_api(data)
+            category_id = extract_category_id_from_url(url)
+            records = parse_products_api(data, category_id=category_id)
             for r in records:
                 all_records[r["id"]] = r
             logger.info("Parsed %d products from products API", len(records))
