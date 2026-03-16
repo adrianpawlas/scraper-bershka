@@ -2,8 +2,8 @@ name: Run Bershka Scraper
 
 on:
   schedule:
-    # Run daily at midnight UTC
-    - cron: '0 0 * * *'
+    # Run daily at afternoon UTC
+    - cron: '0 15 * * *'
   workflow_dispatch:
     # Allow manual trigger
 
