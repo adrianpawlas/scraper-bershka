@@ -451,10 +451,12 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
                         except Exception as e2:
                             print(f"    Failed to insert product {row.get('id')}: {str(e2)[:80]}")
             
-            # Smart sync: remove products for this source that are no longer in catalog
+            # Smart sync: remove products for this source that are no longer in catalog.
+            # Only run on a full scrape - with --limit we only collected a subset, so
+            # deleting 'missing' products would wipe the rest of the catalog.
             try:
                 current_ids = [row.get("id") for row in collected if row.get("id")]
-                if current_ids:
+                if current_ids and limit == 0:
                     db.delete_missing_for_source_merchant_country(
                         source=source,
                         merchant_name=merchant,
@@ -462,6 +464,8 @@ def run_for_site(site: Dict, session: PoliteSession, db: SupabaseREST, supa_env:
                         current_ids=current_ids,
                     )
                     print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: removed stale products no longer in catalog")
+                elif current_ids and limit > 0:
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: skipping stale-product cleanup (--limit mode)")
             except Exception as e:
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] {brand}: warning - could not remove stale products: {e}")
             

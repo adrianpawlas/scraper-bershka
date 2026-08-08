@@ -355,6 +355,12 @@ BERSHKA_APP_ID = 1
 BERSHKA_LANGUAGE_ID = -15
 BERSHKA_LOCALE = "en_GB"
 
+# Pull & Bear API configuration (store IDs from bershka_sites.yaml)
+PULL_BEAR_BASE_URL = "https://www.pullandbear.com/itxrest/3/catalog/store/24009477/20309455"
+PULL_BEAR_APP_ID = 1
+PULL_BEAR_LANGUAGE_ID = -15
+PULL_BEAR_LOCALE = "en_GB"
+
 # Legacy Bershka Configuration (for backward compatibility)
 BERSHKA_BASE_URL = "https://www.bershka.com/itxrest/3/catalog/store/45009578/40259549"
 BERSHKA_APP_ID = 1
@@ -399,9 +405,17 @@ CATEGORY_IDS = {
 }
 
 GENDER_MAPPING = {
-    'MAN': 'men',
-    'WOMAN': 'women',
-    '': 'unisex'
+    # Bershka API returns plural section names (MEN/WOMEN); keep singular
+    # variants too for other sources that use MAN/WOMAN. Values use the
+    # uppercase form (MAN/WOMAN) documented in the README and produced by
+    # transform.to_supabase_row, so both scraper paths stay consistent.
+    'MEN': 'MAN',
+    'WOMEN': 'WOMAN',
+    'MAN': 'MAN',
+    'WOMAN': 'WOMAN',
+    'KIDS': 'KIDS',
+    '': 'unisex',
+    None: 'unisex',
 }
 
 CATEGORY_CLASSIFICATION = {

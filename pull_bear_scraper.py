@@ -16,6 +16,8 @@ from urllib.parse import urljoin
 
 import aiohttp
 import requests
+import ssl
+import certifi
 import torch
 from PIL import Image
 from supabase import create_client, Client
@@ -23,6 +25,21 @@ from transformers import AutoProcessor, AutoModel
 from tqdm.asyncio import tqdm
 import psycopg2
 from psycopg2.extras import execute_values
+
+
+def _ssl_context() -> ssl.SSLContext:
+    """Create an SSL context using certifi's CA bundle.
+
+    Without this, aiohttp on some platforms (e.g. macOS Python builds)
+    cannot verify the site's certificate and all requests fail with
+    SSLCertVerificationError.
+    """
+    return ssl.create_default_context(cafile=certifi.where())
+
+
+def _aiohttp_connector() -> aiohttp.TCPConnector:
+    """TCPConnector with proper TLS verification (certifi)."""
+    return aiohttp.TCPConnector(limit=10, ttl_dns_cache=300, ssl=_ssl_context())
 
 from config import (
     SUPABASE_URL, SUPABASE_KEY, PULL_BEAR_BASE_URL, PULL_BEAR_APP_ID,
@@ -220,7 +237,7 @@ class BershkaScraper:
         """Async context manager entry."""
         self.session = aiohttp.ClientSession(
             headers=get_realistic_headers('https://www.pullandbear.com/'),
-            connector=aiohttp.TCPConnector(limit=10, ttl_dns_cache=300),
+            connector=_aiohttp_connector(),
             timeout=aiohttp.ClientTimeout(total=30, connect=10)
         )
         return self
@@ -552,6 +569,67 @@ class BershkaScraper:
             logger.error(f"Error generating embedding for {image_url}: {e}")
             return None
 
+    def _get_text_embedding(self, text: str, max_length: int = None) -> Optional[List[float]]:
+        """Generate 768-dim text embedding using the same SigLIP model as images.
+        Used for the info_embedding column. Defaults to the tokenizer's maximum
+        sequence length (SigLIP text encoder caps at 64 tokens).
+        """
+        if not text or not str(text).strip():
+            return None
+        try:
+            if max_length is None:
+                max_length = getattr(
+                    getattr(self.processor, "tokenizer", None), "model_max_length", 64
+                )
+            inputs = self.processor(
+                text=[str(text).strip()],
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+                max_length=max_length,
+            )
+            input_ids = inputs.get("input_ids")
+            if input_ids is None:
+                return None
+
+            with torch.no_grad():
+                if hasattr(self.model, "get_text_features"):
+                    outputs = self.model.get_text_features(input_ids=input_ids)
+                    # transformers 5.x returns BaseModelOutputWithPooling;
+                    # older versions return the pooled tensor directly.
+                    if isinstance(outputs, torch.Tensor):
+                        text_embeds = outputs
+                    else:
+                        text_embeds = getattr(outputs, "pooler_output", None)
+                        if text_embeds is None:
+                            text_embeds = getattr(outputs, "text_embeds", None)
+                        if text_embeds is None:
+                            last_hidden = getattr(outputs, "last_hidden_state", None)
+                            # SigLIP text pooling uses the last (EOS) token
+                            text_embeds = last_hidden[:, -1, :] if last_hidden is not None else None
+                        if text_embeds is None:
+                            return None
+                else:
+                    outputs = self.model(input_ids=input_ids)
+                    text_embeds = getattr(outputs, "text_embeds", None) or getattr(
+                        outputs, "last_hidden_state", None
+                    )
+                    if text_embeds is not None and text_embeds.dim() > 1:
+                        text_embeds = text_embeds[:, 0, :]
+                    else:
+                        return None
+
+            embedding = text_embeds.squeeze().tolist()
+            if isinstance(embedding[0], list):
+                embedding = embedding[0]
+            if len(embedding) != 768:
+                logger.warning(f"Text embedding dimension mismatch: got {len(embedding)}, expected 768")
+                return None
+            return embedding
+        except Exception as e:
+            logger.error(f"Error generating text embedding: {e}")
+            return None
+
     def _process_image_embedding(self, image_data: bytes) -> Optional[List[float]]:
         """Process image and generate embedding (runs in thread pool) with better error handling."""
         try:
@@ -696,13 +774,60 @@ class BershkaScraper:
 
         return processed_products
 
+    def _build_info_embedding_text(self, product: Dict[str, Any]) -> str:
+        """Build the info text used for the info_embedding column (same space as image)."""
+        info_parts = []
+        if product.get("title"):
+            info_parts.append(str(product["title"]))
+        if product.get("description"):
+            info_parts.append(str(product["description"]))
+        if product.get("price") is not None:
+            info_parts.append(f"Price: {product['price']}")
+        if product.get("sale") is not None:
+            info_parts.append(f"Sale: {product['sale']}")
+        if product.get("brand"):
+            info_parts.append(str(product["brand"]))
+        if product.get("category"):
+            info_parts.append(str(product["category"]))
+        if product.get("metadata"):
+            try:
+                meta = product["metadata"]
+                if isinstance(meta, str):
+                    meta = json.loads(meta)
+                if isinstance(meta, dict):
+                    for k, v in meta.items():
+                        if v is not None and str(v).strip():
+                            info_parts.append(f"{k}: {v}")
+            except Exception:
+                pass
+        return " ".join(info_parts).strip()
+
     async def save_to_supabase(self, products: List[Dict[str, Any]]) -> int:
         """Save products to Supabase database."""
         try:
-            # Convert embeddings to proper format for Supabase vector
+            # Align rows with the products schema: image_embedding/info_embedding columns,
+            # price stored as text.
             for product in products:
+                # Map the in-memory 'embedding' (image embedding) to the image_embedding column
                 if product.get('embedding'):
-                    product['embedding'] = f"[{', '.join(map(str, product['embedding']))}]"
+                    product['image_embedding'] = f"[{', '.join(map(str, product['embedding']))}]"
+                product.pop('embedding', None)
+
+                # Build info_embedding (text embedding of title/description/price/metadata)
+                info_text = self._build_info_embedding_text(product)
+                if info_text:
+                    info_emb = self._get_text_embedding(info_text)
+                    if info_emb:
+                        product['info_embedding'] = f"[{', '.join(map(str, info_emb))}]"
+
+                # Normalize price to text (schema stores price as text)
+                price_val = product.get("price")
+                if isinstance(price_val, (int, float)):
+                    if isinstance(price_val, int) and price_val >= 1000:
+                        product["price"] = str(price_val / 100.0)
+                    else:
+                        num_val = float(price_val)
+                        product["price"] = str(int(num_val)) if num_val == int(num_val) else str(num_val)
 
             # Insert in batches
             batch_size = 100
@@ -890,7 +1015,7 @@ class BershkaScraper:
             import asyncio
             await asyncio.sleep(1)  # Rate limiting
 
-            async with aiohttp.ClientSession(headers=headers) as session:
+            async with aiohttp.ClientSession(headers=headers, connector=_aiohttp_connector()) as session:
                 async with session.get(url, timeout=aiohttp.ClientTimeout(total=30)) as response:
                     if response.status == 200:
                         data = await response.json()

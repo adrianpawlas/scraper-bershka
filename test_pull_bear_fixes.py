@@ -12,7 +12,7 @@ import os
 # Add current directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from bershka_scraper import BershkaScraper
+from bershka_scraper import BershkaScraper, load_product_ids_from_url_async
 
 # Mock the Supabase client to avoid requiring credentials
 class MockSupabaseClient:
@@ -51,8 +51,8 @@ async def test_category_scraping():
     logger.info("Testing Bershka scraper fixes...")
 
     try:
-        # Test with a category that was working before
-        test_category_id = "1030204788"  # This one was working in the logs
+        # Test with the men's all category (present in category_urls.txt)
+        test_category_id = "1010834564"  # All men's products
 
         async with BershkaScraper() as scraper:
             logger.info(f"Testing category {test_category_id}...")

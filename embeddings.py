@@ -121,9 +121,10 @@ def get_image_embedding(image_url: str, max_retries: int = 3) -> Optional[list]:
     return None
 
 
-def get_text_embedding(text: str, max_length: int = 512) -> Optional[list]:
+def get_text_embedding(text: str, max_length: int = None) -> Optional[list]:
     """Get text embedding using the same SigLIP model as image embeddings (768-dim).
     Use for info_embedding: title, description, price, metadata, etc.
+    Defaults to the tokenizer's maximum sequence length (SigLIP text encoder caps at 64 tokens).
     """
     if not text or not str(text).strip():
         return None
@@ -137,6 +138,8 @@ def get_text_embedding(text: str, max_length: int = 512) -> Optional[list]:
         return None
 
     try:
+        if max_length is None:
+            max_length = getattr(getattr(processor, "tokenizer", None), "model_max_length", 64)
         # Tokenize with the same processor (SigLIP uses text encoder)
         inputs = processor(
             text=[text_str],
@@ -146,20 +149,30 @@ def get_text_embedding(text: str, max_length: int = 512) -> Optional[list]:
             max_length=max_length,
         )
         input_ids = inputs.get("input_ids")
-        attention_mask = inputs.get("attention_mask")
         if input_ids is None:
             return None
 
         with torch.no_grad():
             # SigLIP text encoder - same model as image, same embedding space
             if hasattr(model, "get_text_features"):
-                text_embeds = model.get_text_features(
-                    input_ids=input_ids,
-                    attention_mask=attention_mask,
-                )
+                outputs = model.get_text_features(input_ids=input_ids)
+                # transformers 5.x returns BaseModelOutputWithPooling;
+                # older versions return the pooled tensor directly.
+                if isinstance(outputs, torch.Tensor):
+                    text_embeds = outputs
+                else:
+                    text_embeds = getattr(outputs, "pooler_output", None)
+                    if text_embeds is None:
+                        text_embeds = getattr(outputs, "text_embeds", None)
+                    if text_embeds is None:
+                        last_hidden = getattr(outputs, "last_hidden_state", None)
+                        # SigLIP text pooling uses the last (EOS) token
+                        text_embeds = last_hidden[:, -1, :] if last_hidden is not None else None
+                    if text_embeds is None:
+                        return None
             else:
                 # Fallback: some checkpoints use forward with text inputs
-                outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+                outputs = model(input_ids=input_ids)
                 text_embeds = getattr(outputs, "text_embeds", None) or getattr(
                     outputs, "last_hidden_state", None
                 )

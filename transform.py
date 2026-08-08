@@ -189,7 +189,7 @@ def to_supabase_row(raw: Dict[str, Any]) -> Dict[str, Any]:
                     if num_val >= 1000 and abs(num_val - int(num_val)) < 1e-9:
                         num_val = num_val / 100.0
             if num_val is not None:
-                row["price"] = str(num_val) if num_val == int(num_val) else str(num_val)
+                row["price"] = str(int(num_val)) if num_val == int(num_val) else str(num_val)
     except Exception:
         pass
 
